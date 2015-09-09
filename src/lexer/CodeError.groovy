@@ -11,9 +11,8 @@ class CodeError {
     @Override
     public String toString() {
         return "Error{" +
-                "col=" + col +
-                ", row=" + row +
-                ", message='" + message + '\'' +
-                '}';
+                "row=" + row +
+                ", col=" + col +
+                ", message=" + message + '}';
     }
 }
