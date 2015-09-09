@@ -5,26 +5,26 @@ package lexer
  */
 enum TokenType {
 
-    UNKNOWN,
-    IMPORT,
+    UNKNOWN('Unknown'),
+    IMPORT('import'),
 
-    NUMBERIC,
-    STRING,
+    NUMBERIC('numeric'),
+    STRING('string'),
 
-    IDENTIFIER,
+    IDENTIFIER('identifier'),
 
-    IS,
-    ORIGIN,
-    SCALE,
-    ROT,
+    IS('is'),
+    ORIGIN('origin'),
+    SCALE('scale'),
+    ROT('rot'),
 
-    T,
+    T('T'),
 
-    FOR,
-    FORM,
-    TO,
-    DRAW,
-    STEP,
+    FOR('for'),
+    FROM('from'),
+    TO('to'),
+    DRAW('draw'),
+    STEP('step'),
 
     OPEN_BRACKET('('),
     CLOSE_BRACKET(')'),
@@ -38,16 +38,16 @@ enum TokenType {
     MOD('%'),
     POWER('**'),
 
-    CONST,
+    CONST('const'),
 
-    COMMENT,
+    COMMENT('comment'),
     ASSIGMENT('=')
 
 
     String identifier
 
     TokenType(){
-        this(name())
+        this(values()[ordinal()].name())
     }
 
     TokenType(String id) {

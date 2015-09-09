@@ -117,7 +117,7 @@ class Laxer {
                         }
                     }else {
                         backforwardChar(c)
-                        return new Token( buffer.toString(), TokenType.NUMBERIC)
+                        return new Token(buffer.toString(), TokenType.NUMBERIC)
                     }
 
                     break
