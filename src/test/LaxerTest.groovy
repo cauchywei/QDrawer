@@ -1,4 +1,6 @@
 package test
+
+import exception.ReachTheEndOfCodeException
 import lexer.Laxer
 import lexer.TokenType
 import org.apache.tools.ant.filters.StringInputStream
@@ -17,103 +19,64 @@ class LaxerTest extends GroovyTestCase{
         def errors = []
 
         Laxer laxer = new Laxer(reader)
+        matchToken(laxer,'hello',TokenType.IDENTIFIER)
 
+
+        matchToken(laxer,'233',TokenType.NUMBERIC)
+
+        matchToken(laxer,'C',TokenType.IDENTIFIER)
+
+        matchToken(laxer,'hello world!',TokenType.STRING)
+
+        matchToken(laxer,'hello\\tworld\\n',TokenType.STRING)
+
+        matchToken(laxer,'he1llo\t wor34ld',TokenType.STRING)
+
+        matchToken(laxer,'22.3',TokenType.NUMBERIC)
+
+        matchToken(laxer,'22e3',TokenType.NUMBERIC)
+
+        matchToken(laxer,'22E3',TokenType.NUMBERIC)
+
+        matchToken(laxer,'+',TokenType.PLUS)
+
+        matchToken(laxer,'-',TokenType.MINUS)
+
+        matchToken(laxer,'*',TokenType.MUL)
+
+        matchToken(laxer,'/',TokenType.DIV)
+
+        matchToken(laxer,'%',TokenType.MOD)
+
+        matchToken(laxer,'**',TokenType.POWER)
+
+        matchToken(laxer,'(',TokenType.OPEN_BRACKET)
+
+        matchToken(laxer,')',TokenType.CLOSE_BRACKET)
+
+        matchToken(laxer,'--',TokenType.COMMENT)
+
+        matchToken(laxer,'//',TokenType.COMMENT)
+
+        try {
+           laxer.getToken([])
+        }catch (e){
+            assertTrue(e instanceof ReachTheEndOfCodeException)
+        }
+    }
+
+    @Test
+    void testBadToken(){
+
+    }
+
+
+    static void matchToken(Laxer laxer,String value,TokenType type){
+        def errors = []
         def token = laxer.getToken(errors)
         assertEquals([],errors)
-        assertEquals('hello',token.getValue())
-        assertEquals(TokenType.IDENTIFIER,token.getType())
-
-
-        token = laxer.getToken(errors)
-        assertEquals([],errors)
-        assertEquals('233',token.getValue())
-        assertEquals(TokenType.NUMBERIC,token.getType())
-
-        token = laxer.getToken(errors)
-        assertEquals([],errors)
-        assertEquals('C',token.getValue())
-        assertEquals(TokenType.IDENTIFIER,token.getType())
-
-
-        token = laxer.getToken(errors)
-        assertEquals([],errors)
-        assertEquals('hello world!',token.getValue())
-        assertEquals(TokenType.STRING,token.getType())
-
-        token = laxer.getToken(errors)
-        assertEquals([],errors)
-        assertEquals('hello\\tworld\\n',token.getValue())
-        assertEquals(TokenType.STRING,token.getType())
-
-        token = laxer.getToken(errors)
-        assertEquals([],errors)
-        assertEquals('he1llo\t wor34ld',token.getValue())
-        assertEquals(TokenType.STRING,token.getType())
-
-        token = laxer.getToken(errors)
-        assertEquals([],errors)
-        assertEquals('22.3',token.getValue())
-        assertEquals(TokenType.NUMBERIC,token.getType())
-
-        token = laxer.getToken(errors)
-        assertEquals([],errors)
-        assertEquals('22e3',token.getValue())
-        assertEquals(TokenType.NUMBERIC,token.getType())
-
-        token = laxer.getToken(errors)
-        assertEquals([],errors)
-        assertEquals('22E3',token.getValue())
-        assertEquals(TokenType.NUMBERIC,token.getType())
-
-        token = laxer.getToken(errors)
-        assertEquals([],errors)
-        assertEquals('+',token.getValue())
-        assertEquals(TokenType.PLUS,token.getType())
-
-        token = laxer.getToken(errors)
-        assertEquals([],errors)
-        assertEquals('-',token.getValue())
-        assertEquals(TokenType.MINUS,token.getType())
-
-        token = laxer.getToken(errors)
-        assertEquals([],errors)
-        assertEquals('*',token.getValue())
-        assertEquals(TokenType.MUL,token.getType())
-
-        token = laxer.getToken(errors)
-        assertEquals([],errors)
-        assertEquals('/',token.getValue())
-        assertEquals(TokenType.DIV,token.getType())
-
-        token = laxer.getToken(errors)
-        assertEquals([],errors)
-        assertEquals('%',token.getValue())
-        assertEquals(TokenType.MOD,token.getType())
-
-        token = laxer.getToken(errors)
-        assertEquals([],errors)
-        assertEquals('**',token.getValue())
-        assertEquals(TokenType.POWER,token.getType())
-
-        token = laxer.getToken(errors)
-        assertEquals([],errors)
-        assertEquals('(',token.getValue())
-        assertEquals(TokenType.OPEN_BRACKET,token.getType())
-
-        token = laxer.getToken(errors)
-        assertEquals([],errors)
-        assertEquals(')',token.getValue())
-        assertEquals(TokenType.CLOSE_BRACKET,token.getType())
-
-        token = laxer.getToken(errors)
-        assertEquals([],errors)
-        assertEquals('--',token.getValue())
-        assertEquals(TokenType.COMMENT,token.getType())
-
-        token = laxer.getToken(errors)
-        assertEquals([],errors)
-        assertEquals('//',token.getValue())
-        assertEquals(TokenType.COMMENT,token.getType())
+        assertEquals(value,token.getValue())
+        assertEquals(type,token.getType())
     }
 
 }

@@ -212,7 +212,7 @@ class Laxer {
         }
 
         if (mCharBuffer.isEmpty()) {
-            throw null
+            return null
         }
 
         mCharBuffer.remove(0)
