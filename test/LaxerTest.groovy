@@ -12,9 +12,25 @@ class LaxerTest extends GroovyTestCase{
     @Test
     void testCorrectToken() {
 
-        def code = 'hello 233 CPP14 Ja_VA "hello world!" "hello\\tworld\\n" "he1llo\t wor34ld" \n  22.3 22e3 22E3 +-*/%** ()  -- QAQ \n// 23333333333\n '
+        def code = 'import imPOrt const is origin scale rot for from to t step draw hello 233 CPP14 Ja_VA "hello world!" "hello\\tworld\\n" "he1llo\t wor34ld" \n  22.3 22e3 22E3 +-*/%** ()  -- QAQ \n// 23333333333\n '
         def reader = new InputStreamReader(new StringInputStream(code))
         def laxer = new Laxer(reader)
+
+        matchToken(laxer, 'import', TokenType.IMPORT)
+        matchToken(laxer, 'imPOrt', TokenType.IMPORT)
+        matchToken(laxer, 'const', TokenType.CONST)
+        matchToken(laxer, 'is', TokenType.IS)
+        matchToken(laxer, 'origin', TokenType.ORIGIN)
+        matchToken(laxer, 'scale', TokenType.SCALE)
+        matchToken(laxer, 'rot', TokenType.ROT)
+        matchToken(laxer, 'for', TokenType.FOR)
+        matchToken(laxer, 'from', TokenType.FROM)
+        matchToken(laxer, 'to', TokenType.TO)
+        matchToken(laxer, 't', TokenType.T)
+        matchToken(laxer, 'step', TokenType.STEP)
+        matchToken(laxer, 'draw', TokenType.DRAW)
+
+
 
         matchToken(laxer, 'hello', TokenType.IDENTIFIER)
         matchToken(laxer, '233', TokenType.NUMBERIC)

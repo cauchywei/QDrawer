@@ -16,7 +16,21 @@ class Laxer {
         STRING_ESCAPING
     }
 
+
     static final int DEFAULT_CHAR_BUFFER_SIZE = 20
+
+    public static final def KEY_IDENTIFIERS =[TokenType.IMPORT    .name(),
+                                              TokenType.CONST     .name(),
+                                              TokenType.IS        .name(),
+                                              TokenType.ORIGIN    .name(),
+                                              TokenType.SCALE     .name(),
+                                              TokenType.ROT       .name(),
+                                              TokenType.T         .name(),
+                                              TokenType.FOR       .name(),
+                                              TokenType.FROM      .name(),
+                                              TokenType.TO        .name(),
+                                              TokenType.DRAW      .name(),
+                                              TokenType.STEP      .name()]
 
     List<Character> mCharBuffer = []
     InputStreamReader  mStreamReader
@@ -152,7 +166,7 @@ class Laxer {
                 case ParseState.IDENTIFIER:
                     if (!(c ==~ /[a-zA-Z_0-9]/)) {
                         backforwardChar(c)
-                        return new Token(buffer.toString(), TokenType.IDENTIFIER)
+                        return generateTokenForIdentifier(buffer.toString())
                     }else {
                         buffer << c
                     }
@@ -204,7 +218,7 @@ class Laxer {
             case ParseState.NUMERIC:
                 return new Token(buffer.toString(), TokenType.NUMBERIC)
             case ParseState.IDENTIFIER:
-                return new Token(buffer.toString(), TokenType.IDENTIFIER)
+                return generateTokenForIdentifier(buffer.toString())
             case ParseState.STRING:
             case ParseState.STRING_ESCAPING:
                 errors << generateError(TokenType.STRING,'String end excepted.')
@@ -213,6 +227,17 @@ class Laxer {
                 return new Token(buffer.toString(),TokenType.COMMENT)
         }
 
+    }
+
+
+    private Token generateTokenForIdentifier(String identifier){
+        def upperCase = identifier.toUpperCase()
+        if (upperCase in KEY_IDENTIFIERS){
+            def type = TokenType.valueOf(upperCase)
+            return new Token(identifier,type)
+        }else {
+            return new Token(identifier,TokenType.IDENTIFIER)
+        }
     }
 
     private Character peekChar() throws ReachTheEndOfCodeException{

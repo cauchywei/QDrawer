@@ -6,12 +6,10 @@ package lexer
 enum TokenType {
 
     UNKNOWN('Unknown'),
+
     IMPORT('import'),
 
-    NUMBERIC('numeric'),
-    STRING('string'),
-
-    IDENTIFIER('identifier'),
+    CONST('const'),
 
     IS('is'),
     ORIGIN('origin'),
@@ -26,6 +24,13 @@ enum TokenType {
     DRAW('draw'),
     STEP('step'),
 
+    NUMBERIC('numeric'),
+    STRING('string'),
+
+    IDENTIFIER('identifier'),
+
+
+
     OPEN_BRACKET('('),
     CLOSE_BRACKET(')'),
     SEMICO(';'),
@@ -37,8 +42,6 @@ enum TokenType {
     DIV('/'),
     MOD('%'),
     POWER('**'),
-
-    CONST('const'),
 
     COMMENT('comment'),
     ASSIGMENT('=')
