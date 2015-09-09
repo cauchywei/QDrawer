@@ -11,32 +11,24 @@ class Laxer {
         BEGIN,
         NUMERIC,
         IDENTIFIER,
+        COMMENT,
         STRING,
         STRING_ESCAPING
     }
 
-    static final int DEFAULT_CHAR_BUFFER_SIZE = 10
+    static final int DEFAULT_CHAR_BUFFER_SIZE = 20
 
-    List<Token> mTokenBuffer = []
     List<Character> mCharBuffer = []
     InputStreamReader  mStreamReader
     int col = 1,row = 1
 
 
     Laxer(InputStreamReader mStreamReader) {
-        "]\
-p-=uy678"
         this.mStreamReader = mStreamReader
     }
 
 
     Token getToken(List<CodeError> errors){
-
-        if (!mTokenBuffer.isEmpty()){
-
-            def remove = mTokenBuffer.remove(0)
-            return remove
-        }
 
         def state = ParseState.BEGIN
         StringBuilder buffer = new StringBuilder()
@@ -61,7 +53,10 @@ p-=uy678"
                             def next = peekChar()
                             if (next == '-'){
                                 takeChar()
-                                return new Token('--',  TokenType.COMMENT)
+                                buffer << '--'
+//                                return new Token('--',  TokenType.COMMENT)
+                                state = ParseState.COMMENT
+                                break
                             }else {
                                 return new Token(TokenType.MINUS)
                             }
@@ -77,7 +72,9 @@ p-=uy678"
                             def next = peekChar()
                             if (next == '/'){
                                 takeChar()
-                                return new Token('//',  TokenType.COMMENT)
+                                buffer << '//'
+                                state = ParseState.COMMENT
+                                break
                             }else {
                                 return new Token(TokenType.DIV)
                             }
@@ -185,6 +182,14 @@ p-=uy678"
                         state = ParseState.STRING;
                     }
                     break
+
+                case ParseState.COMMENT:
+                    if (c == '\n'){
+                        return new Token(buffer.toString(),TokenType.COMMENT)
+                    }else {
+                        buffer << c
+                    }
+                    break
             }
 
             col++
@@ -199,11 +204,13 @@ p-=uy678"
             case ParseState.NUMERIC:
                 return new Token(buffer.toString(), TokenType.NUMBERIC)
             case ParseState.IDENTIFIER:
-                return new Token(buffer.toString(), TokenType.NUMBERIC)
+                return new Token(buffer.toString(), TokenType.IDENTIFIER)
             case ParseState.STRING:
             case ParseState.STRING_ESCAPING:
                 errors << generateError(TokenType.STRING,'String end excepted.')
                 return null;
+            case ParseState.COMMENT:
+                return new Token(buffer.toString(),TokenType.COMMENT)
         }
 
     }
@@ -231,10 +238,6 @@ p-=uy678"
         }
 
         mCharBuffer.remove(0)
-    }
-
-    void backforwardToken(Token token){
-        mTokenBuffer.add(0,token)
     }
 
     boolean hasNext(){
