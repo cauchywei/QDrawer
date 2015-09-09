@@ -10,7 +10,5 @@ class Parser {
     InputStreamReader mInputStreamReader
     Laxer mLaxer
 
-    void parse() {
-        mLaxer.in
-    }
+
 }

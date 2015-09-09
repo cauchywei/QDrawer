@@ -10,38 +10,52 @@ import org.junit.Test
 class LaxerTest extends GroovyTestCase{
 
     @Test
-    void testCorrectToken(){
+    void testCorrectToken() {
 
         def code = 'hello 233 CPP14 Ja_VA "hello world!" "hello\\tworld\\n" "he1llo\t wor34ld" \n  22.3 22e3 22E3 +-*/%** ()  -- // '
         def reader = new InputStreamReader(new StringInputStream(code))
         def laxer = new Laxer(reader)
 
-        matchToken(laxer,'hello',TokenType.IDENTIFIER)
-        matchToken(laxer,'233',TokenType.NUMBERIC)
-        matchToken(laxer,'CPP14',TokenType.IDENTIFIER)
-        matchToken(laxer,'Ja_VA',TokenType.IDENTIFIER)
-        matchToken(laxer,'hello world!',TokenType.STRING)
-        matchToken(laxer,'hello\\tworld\\n',TokenType.STRING)
-        matchToken(laxer,'he1llo\t wor34ld',TokenType.STRING)
-        matchToken(laxer,'22.3',TokenType.NUMBERIC)
-        matchToken(laxer,'22e3',TokenType.NUMBERIC)
-        matchToken(laxer,'22E3',TokenType.NUMBERIC)
-        matchToken(laxer,'+',TokenType.PLUS)
-        matchToken(laxer,'-',TokenType.MINUS)
-        matchToken(laxer,'*',TokenType.MUL)
-        matchToken(laxer,'/',TokenType.DIV)
-        matchToken(laxer,'%',TokenType.MOD)
-        matchToken(laxer,'**',TokenType.POWER)
-        matchToken(laxer,'(',TokenType.OPEN_BRACKET)
-        matchToken(laxer,')',TokenType.CLOSE_BRACKET)
-        matchToken(laxer,'--',TokenType.COMMENT)
-        matchToken(laxer,'//',TokenType.COMMENT)
+        matchToken(laxer, 'hello', TokenType.IDENTIFIER)
+        matchToken(laxer, '233', TokenType.NUMBERIC)
+        matchToken(laxer, 'CPP14', TokenType.IDENTIFIER)
+        matchToken(laxer, 'Ja_VA', TokenType.IDENTIFIER)
+        matchToken(laxer, 'hello world!', TokenType.STRING)
+        matchToken(laxer, 'hello\\tworld\\n', TokenType.STRING)
+        matchToken(laxer, 'he1llo\t wor34ld', TokenType.STRING)
+        matchToken(laxer, '22.3', TokenType.NUMBERIC)
+        matchToken(laxer, '22e3', TokenType.NUMBERIC)
+        matchToken(laxer, '22E3', TokenType.NUMBERIC)
+        matchToken(laxer, '+', TokenType.PLUS)
+        matchToken(laxer, '-', TokenType.MINUS)
+        matchToken(laxer, '*', TokenType.MUL)
+        matchToken(laxer, '/', TokenType.DIV)
+        matchToken(laxer, '%', TokenType.MOD)
+        matchToken(laxer, '**', TokenType.POWER)
+        matchToken(laxer, '(', TokenType.OPEN_BRACKET)
+        matchToken(laxer, ')', TokenType.CLOSE_BRACKET)
+        matchToken(laxer, '--', TokenType.COMMENT)
+        matchToken(laxer, '//', TokenType.COMMENT)
 
         try {
-           laxer.getToken([])
-        }catch (e){
+            laxer.getToken([])
+        } catch (e) {
             assertTrue(e instanceof ReachTheEndOfCodeException)
         }
+
+        reader.close()
+
+        code = 'FOR T FROM 0 TO 2*PI STEP PI/50 DRAW(SIN(T),COS(T));'
+        reader = new InputStreamReader(new StringInputStream(code))
+        laxer = new Laxer(reader)
+        def token
+        def errors = []
+
+        while (laxer.hasNext()) {
+            token = laxer.getToken(errors)
+            println token.value
+        }
+
 
         reader.close()
     }

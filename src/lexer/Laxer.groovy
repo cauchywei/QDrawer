@@ -24,6 +24,8 @@ class Laxer {
 
 
     Laxer(InputStreamReader mStreamReader) {
+        "]\
+p-=uy678"
         this.mStreamReader = mStreamReader
     }
 
@@ -81,6 +83,8 @@ class Laxer {
                             }
                         case '%':
                             return new Token(TokenType.MOD)
+                        case ';':
+                            return new Token(TokenType.SEMICO)
                         case '"':
                             state = ParseState.STRING
                             break
@@ -232,6 +236,11 @@ class Laxer {
     void backforwardToken(Token token){
         mTokenBuffer.add(0,token)
     }
+
+    boolean hasNext(){
+        return peekChar() != null
+    }
+
     private void backforwardChar(char chr){
         if (col - 1 > 0)
             col--
