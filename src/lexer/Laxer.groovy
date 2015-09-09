@@ -40,49 +40,51 @@ class Laxer {
 
         while (c = takeChar()) {
 
-            buffer << c
 
             switch (state) {
 
                 case ParseState.BEGIN:
-
                     switch (c){
                         case '(':
-                            return new Token( TokenType.OPEN_BRACKET)
+                            return new Token(TokenType.OPEN_BRACKET)
                         case ')':
-                            return new Token( TokenType.CLOSE_BRACKET)
+                            return new Token(TokenType.CLOSE_BRACKET)
                         case ',':
-                            return new Token( TokenType.COMMA)
+                            return new Token(TokenType.COMMA)
                         case '+':
-                            return new Token( TokenType.PLUS)
+                            return new Token(TokenType.PLUS)
                         case '-':
                             def next = peekChar()
                             if (next == '-'){
+                                takeChar()
                                 return new Token('--',  TokenType.COMMENT)
                             }else {
-                                return new Token( TokenType.MINUS)
+                                return new Token(TokenType.MINUS)
                             }
                         case '*':
                             def next = peekChar()
                             if (next == '*'){
-                                return new Token( TokenType.POWER)
+                                takeChar()
+                                return new Token(TokenType.POWER)
                             }else {
-                                return new Token( TokenType.MUL)
+                                return new Token(TokenType.MUL)
                             }
                         case '/':
                             def next = peekChar()
                             if (next == '/'){
+                                takeChar()
                                 return new Token('//',  TokenType.COMMENT)
                             }else {
-                                return new Token( TokenType.DIV)
+                                return new Token(TokenType.DIV)
                             }
                         case '%':
-                            return new Token( TokenType.MOD)
+                            return new Token(TokenType.MOD)
                         case '"':
                             state = ParseState.STRING
                             break
 
                         case Character.isDigit(c):
+                            buffer << c
                             state = ParseState.NUMERIC
                             break;
                         case '\n':
@@ -94,7 +96,12 @@ class Laxer {
                         default:
 
                         if(c ==~ /[a-zA-Z_]/) {
+                            buffer << c
                             state = ParseState.IDENTIFIER
+                            break;
+                        }else if (c ==~ /[0-9]/){
+                            buffer << c
+                            state = ParseState.NUMERIC
                             break;
                         }else {
                             errors << generateError( "Unexcepted character: '" + c + "'")
@@ -105,16 +112,24 @@ class Laxer {
                     break
                 case ParseState.NUMERIC:
                     if ( Character.isDigit(c)) {
-                        //EMPTY
+                        buffer << c
                     }else if (c == '.'){
                         if (buffer.contains('.') || buffer.contains('e') || buffer.contains('E')){
                             errors << new CodeError(col: col,row: row, message: 'Unexcepted dot.')
                             return null
+                        }else {
+                            buffer << c
                         }
                     }else if (Character.toLowerCase(c) == 'e') {
                         if (buffer.contains('e') || buffer.contains('E')){
                             errors << new CodeError(col: col,row: row, message: 'Unexcepted Exp.')
+                            return null
+                        }else {
+                            buffer << c
                         }
+                    }else if ( c ==~ /[a-zA-Z_]/){
+                        errors << generateError('Unexcepted character \'' + c + '\' appending numeric ')
+                        return null
                     }else {
                         backforwardChar(c)
                         return new Token(buffer.toString(), TokenType.NUMBERIC)
@@ -125,28 +140,33 @@ class Laxer {
                     if (!(c ==~ /[a-zA-Z_0-9]/)) {
                         backforwardChar(c)
                         return new Token(buffer.toString(), TokenType.IDENTIFIER)
+                    }else {
+                        buffer << c
                     }
+
                     break
                 case ParseState.STRING:
 
                     if (c == '"') {
-                        def value = buffer.toString()
-                        return new Token(value.substring(1,value.size() - 1), TokenType.STRING)
+                        return new Token(buffer.toString(), TokenType.STRING)
                     }else if (c == '\\') {
+                        buffer << c
                         state = ParseState.STRING_ESCAPING
-                        break
                     }else if (c == '\n'){
                         errors << generateError(  'String must in a line.');
                         return null;
+                    }else {
+                        buffer << c
                     }
+
                     break
                 case ParseState.STRING_ESCAPING:
                     if (c == '\n') {
                         errors << generateError( 'String must in a line.');
                         return null;
                     } else {
+                        buffer << c
                         state = ParseState.STRING;
-
                     }
                     break
             }
@@ -198,11 +218,11 @@ class Laxer {
         mCharBuffer.remove(0)
     }
 
-    void pushbackToken(Token token){
-        mTokenBuffer << token
+    void backforwardToken(Token token){
+        mTokenBuffer.add(0,token)
     }
     private void backforwardChar(char chr){
-        mCharBuffer << chr
+        mCharBuffer.add(0,chr)
     }
 
     private void inflateCharBuffer(int size){

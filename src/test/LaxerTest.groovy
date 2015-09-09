@@ -10,7 +10,7 @@ class LaxerTest extends GroovyTestCase{
 
     @Test
     void testCorrectToken(){
-        String code = 'hello 233 C "hello world!" "hello\\tworld\\n" "he1llo\t wor34ld"  22.3 22e3 22E3 +-*/%** ()  -- // '
+        String code = 'hello 233 C "hello world!" "hello\\tworld\\n" "he1llo\t wor34ld" \n  22.3 22e3 22E3 +-*/%** ()  -- // '
 
 
         def reader = new InputStreamReader(new StringInputStream(code))
@@ -42,7 +42,7 @@ class LaxerTest extends GroovyTestCase{
 
         token = laxer.getToken(errors)
         assertEquals([],errors)
-        assertEquals('hello\\t world\\n',token.getValue())
+        assertEquals('hello\\tworld\\n',token.getValue())
         assertEquals(TokenType.STRING,token.getType())
 
         token = laxer.getToken(errors)
@@ -62,7 +62,7 @@ class LaxerTest extends GroovyTestCase{
 
         token = laxer.getToken(errors)
         assertEquals([],errors)
-        assertEquals('22e4',token.getValue())
+        assertEquals('22E3',token.getValue())
         assertEquals(TokenType.NUMBERIC,token.getType())
 
         token = laxer.getToken(errors)
