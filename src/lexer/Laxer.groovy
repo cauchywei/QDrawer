@@ -31,7 +31,9 @@ class Laxer {
     Token getToken(List<CodeError> errors){
 
         if (!mTokenBuffer.isEmpty()){
-            return mTokenBuffer.remove(0)
+
+            def remove = mTokenBuffer.remove(0)
+            return remove
         }
 
         def state = ParseState.BEGIN
@@ -89,6 +91,7 @@ class Laxer {
                             break;
                         case '\n':
                             row++
+                            col = 0
                         case '\t':
                         case '\r':
                         case ' ':
@@ -104,7 +107,7 @@ class Laxer {
                             state = ParseState.NUMERIC
                             break;
                         }else {
-                            errors << generateError( "Unexcepted character: '" + c + "'")
+                            errors << generateError(TokenType.UNKNOWN, "Unexcepted character: '" + c + "'")
                             return null
                         }
                     }
@@ -114,21 +117,30 @@ class Laxer {
                     if ( Character.isDigit(c)) {
                         buffer << c
                     }else if (c == '.'){
+
                         if (buffer.contains('.') || buffer.contains('e') || buffer.contains('E')){
-                            errors << new CodeError(col: col,row: row, message: 'Unexcepted dot.')
+                            errors << generateError(TokenType.NUMBERIC,'Unexcepted character \'' + c + '\' after numeric ')
                             return null
-                        }else {
+                        } else if (!(peekChar() ==~ /[0-9]/)){
+                            errors << generateError(TokenType.NUMBERIC,'Excepted a number after the dot.')
+                            return null
+                        } else {
                             buffer << c
                         }
+
                     }else if (Character.toLowerCase(c) == 'e') {
+
                         if (buffer.contains('e') || buffer.contains('E')){
-                            errors << new CodeError(col: col,row: row, message: 'Unexcepted Exp.')
+                            errors << generateError(TokenType.NUMBERIC,'Unexcepted character \'' + c + '\' after numeric ')
                             return null
-                        }else {
+                        }else if (!(peekChar() ==~ /[0-9]/)){
+                            errors << generateError(TokenType.NUMBERIC,'Excepted a number after the exp identifier.')
+                            return null
+                        } else {
                             buffer << c
                         }
                     }else if ( c ==~ /[a-zA-Z_]/){
-                        errors << generateError('Unexcepted character \'' + c + '\' appending numeric ')
+                        errors << generateError(TokenType.NUMBERIC,'Unexcepted character \'' + c + '\' after numeric ')
                         return null
                     }else {
                         backforwardChar(c)
@@ -153,7 +165,7 @@ class Laxer {
                         buffer << c
                         state = ParseState.STRING_ESCAPING
                     }else if (c == '\n'){
-                        errors << generateError(  'String must in a line.');
+                        errors << generateError(TokenType.STRING, 'String must in a line.');
                         return null;
                     }else {
                         buffer << c
@@ -162,7 +174,7 @@ class Laxer {
                     break
                 case ParseState.STRING_ESCAPING:
                     if (c == '\n') {
-                        errors << generateError( 'String must in a line.');
+                        errors << generateError(TokenType.STRING, 'String must in a line.');
                         return null;
                     } else {
                         buffer << c
@@ -186,10 +198,9 @@ class Laxer {
                 return new Token(buffer.toString(), TokenType.NUMBERIC)
             case ParseState.STRING:
             case ParseState.STRING_ESCAPING:
-                errors << generateError('String end excepted.')
+                errors << generateError(TokenType.STRING,'String end excepted.')
                 return null;
         }
-
 
     }
 
@@ -199,7 +210,7 @@ class Laxer {
         }
 
         if (mCharBuffer.isEmpty()) {
-            throw null
+            return null
         }
 
         mCharBuffer.first()
@@ -222,6 +233,8 @@ class Laxer {
         mTokenBuffer.add(0,token)
     }
     private void backforwardChar(char chr){
+        if (col - 1 > 0)
+            col--
         mCharBuffer.add(0,chr)
     }
 
@@ -233,8 +246,8 @@ class Laxer {
         }
     }
 
-    CodeError generateError(String msg){
-        new CodeError(col: col,row: row,message: msg)
+    CodeError generateError(TokenType type,String msg){
+        new CodeError(col: col,row: row,message: msg,type: type)
     }
 
 }

@@ -6,7 +6,7 @@ class CodeError {
 
     int col,row
     String message
-
+    TokenType type
 
     @Override
     public String toString() {
