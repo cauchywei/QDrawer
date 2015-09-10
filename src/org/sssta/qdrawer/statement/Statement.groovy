@@ -8,7 +8,7 @@ import org.sssta.qdrawer.grammer.GrammarSymbol
  */
 abstract class Statement extends CodeElement {
 
-    public abstract GrammarSymbol createSymbol(boolean secondary);
-    public abstract AstDeclaration generateAst(SymbolModule symbolModule);
+    abstract GrammarSymbol createSymbol(boolean secondary)
+    abstract AstDeclaration generateAst(SymbolModule symbolModule)
 
 }
