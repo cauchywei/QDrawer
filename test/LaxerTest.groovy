@@ -1,7 +1,7 @@
 package test
-import exception.ReachTheEndOfCodeException
-import lexer.Laxer
-import lexer.TokenType
+import org.sssta.qdrawer.exception.ReachTheEndOfCodeException
+import org.sssta.qdrawer.lexer.Laxer
+import org.sssta.qdrawer.lexer.TokenType
 import org.apache.tools.ant.filters.StringInputStream
 import org.junit.Test
 /**
@@ -30,8 +30,6 @@ class LaxerTest extends GroovyTestCase{
         matchToken(laxer, 'step', TokenType.STEP)
         matchToken(laxer, 'draw', TokenType.DRAW)
 
-
-
         matchToken(laxer, 'hello', TokenType.IDENTIFIER)
         matchToken(laxer, '233', TokenType.NUMBERIC)
         matchToken(laxer, 'CPP14', TokenType.IDENTIFIER)
@@ -54,7 +52,7 @@ class LaxerTest extends GroovyTestCase{
         matchToken(laxer, '// 23333333333', TokenType.COMMENT)
 
         try {
-            laxer.getToken([])
+            laxer.takeToken()
         } catch (e) {
             assertTrue(e instanceof ReachTheEndOfCodeException)
         }
@@ -65,10 +63,9 @@ class LaxerTest extends GroovyTestCase{
         reader = new InputStreamReader(new StringInputStream(code))
         laxer = new Laxer(reader)
         def token
-        def errors = []
 
         while (laxer.hasNext()) {
-            token = laxer.getToken(errors)
+            token = laxer.takeToken()
             println token.value
         }
 
@@ -93,9 +90,9 @@ class LaxerTest extends GroovyTestCase{
 
 
     static void matchToken(Laxer laxer,String value,TokenType type){
-        def errors = []
-        def token = laxer.getToken(errors)
-        assertEquals([],errors)
+
+        def token = laxer.takeToken()
+        assertEquals([],laxer.errors)
         assertEquals(value,token.getValue())
         assertEquals(type,token.getType())
     }
@@ -105,9 +102,9 @@ class LaxerTest extends GroovyTestCase{
         def reader = new InputStreamReader(new StringInputStream(code))
         def laxer = new Laxer(reader)
         def errors = []
-        def token = laxer.getToken(errors)
+        def token = laxer.takeToken()
         assertNull(token)
-        assertEquals(1,errors.size())
+        assertEquals(1,laxer.errors.size())
         assertEquals(col,errors.get(0).getCol())
         assertEquals(type,errors.get(0).getType())
         reader.close()

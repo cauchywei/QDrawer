@@ -1,4 +1,4 @@
-package lexer
+package org.sssta.qdrawer.lexer
 /**
  * Created by cauchywei on 15/9/9.
  */

@@ -1,4 +1,4 @@
-package lexer
+package org.sssta.qdrawer.lexer
 
 /**
  * Created by cauchywei on 15/9/9.
@@ -8,7 +8,7 @@ enum TokenType {
     UNKNOWN('Unknown'),
 
     IMPORT('import'),
-
+    MODULE('module'),
     CONST('const'),
 
     IS('is'),

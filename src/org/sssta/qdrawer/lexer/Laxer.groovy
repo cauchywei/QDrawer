@@ -1,5 +1,5 @@
-package lexer
-import exception.ReachTheEndOfCodeException
+package org.sssta.qdrawer.lexer
+import org.sssta.qdrawer.exception.ReachTheEndOfCodeException
 /**
  * Created by cauchywei on 15/9/9.
  */
@@ -17,9 +17,11 @@ class Laxer {
     }
 
 
-    static final int DEFAULT_CHAR_BUFFER_SIZE = 20
+    static final int DEFAULT_CHAR_BUFFER_SIZE = 30
+    static final int DEFAULT_TOKEN_BUFFER_SIZE = 20
 
-    public static final def KEY_IDENTIFIERS =[TokenType.IMPORT    .name(),
+    public static final def KEY_IDENTIFIERS =[TokenType.MODULE    .name(),
+                                              TokenType.IMPORT    .name(),
                                               TokenType.CONST     .name(),
                                               TokenType.IS        .name(),
                                               TokenType.ORIGIN    .name(),
@@ -32,9 +34,12 @@ class Laxer {
                                               TokenType.DRAW      .name(),
                                               TokenType.STEP      .name()]
 
-    List<Character> mCharBuffer = []
+    List<Character> charBuffer = []
+    List<Token> tokenBuffer = []
+    List<CodeError> errors = []
     InputStreamReader  mStreamReader
-    int col = 1,row = 1
+    int col = 1
+    int row = 1
 
 
     Laxer(InputStreamReader mStreamReader) {
@@ -42,7 +47,7 @@ class Laxer {
     }
 
 
-    Token getToken(List<CodeError> errors){
+    private Token getToken(){
 
         def state = ParseState.BEGIN
         StringBuilder buffer = new StringBuilder()
@@ -56,31 +61,31 @@ class Laxer {
                 case ParseState.BEGIN:
                     switch (c){
                         case '(':
-                            return new Token(TokenType.OPEN_BRACKET)
+                            return generateToken(TokenType.OPEN_BRACKET)
                         case ')':
-                            return new Token(TokenType.CLOSE_BRACKET)
+                            return generateToken(TokenType.CLOSE_BRACKET)
                         case ',':
-                            return new Token(TokenType.COMMA)
+                            return generateToken(TokenType.COMMA)
                         case '+':
-                            return new Token(TokenType.PLUS)
+                            return generateToken(TokenType.PLUS)
                         case '-':
                             def next = peekChar()
                             if (next == '-'){
                                 takeChar()
                                 buffer << '--'
-//                                return new Token('--',  TokenType.COMMENT)
+//                                return generateToken('--',  TokenType.COMMENT)
                                 state = ParseState.COMMENT
                                 break
                             }else {
-                                return new Token(TokenType.MINUS)
+                                return generateToken(TokenType.MINUS)
                             }
                         case '*':
                             def next = peekChar()
                             if (next == '*'){
                                 takeChar()
-                                return new Token(TokenType.POWER)
+                                return generateToken(TokenType.POWER)
                             }else {
-                                return new Token(TokenType.MUL)
+                                return generateToken(TokenType.MUL)
                             }
                         case '/':
                             def next = peekChar()
@@ -90,12 +95,12 @@ class Laxer {
                                 state = ParseState.COMMENT
                                 break
                             }else {
-                                return new Token(TokenType.DIV)
+                                return generateToken(TokenType.DIV)
                             }
                         case '%':
-                            return new Token(TokenType.MOD)
+                            return generateToken(TokenType.MOD)
                         case ';':
-                            return new Token(TokenType.SEMICO)
+                            return generateToken(TokenType.SEMICO)
                         case '"':
                             state = ParseState.STRING
                             break
@@ -159,7 +164,7 @@ class Laxer {
                         return null
                     }else {
                         backforwardChar(c)
-                        return new Token(buffer.toString(), TokenType.NUMBERIC)
+                        return generateToken(buffer.toString(), TokenType.NUMBERIC)
                     }
 
                     break
@@ -175,7 +180,7 @@ class Laxer {
                 case ParseState.STRING:
 
                     if (c == '"') {
-                        return new Token(buffer.toString(), TokenType.STRING)
+                        return generateToken(buffer.toString(), TokenType.STRING)
                     }else if (c == '\\') {
                         buffer << c
                         state = ParseState.STRING_ESCAPING
@@ -199,7 +204,7 @@ class Laxer {
 
                 case ParseState.COMMENT:
                     if (c == '\n'){
-                        return new Token(buffer.toString(),TokenType.COMMENT)
+                        return generateToken(buffer.toString(),TokenType.COMMENT)
                     }else {
                         buffer << c
                     }
@@ -216,7 +221,7 @@ class Laxer {
                 throw new ReachTheEndOfCodeException()
                 return null;
             case ParseState.NUMERIC:
-                return new Token(buffer.toString(), TokenType.NUMBERIC)
+                return generateToken(buffer.toString(), TokenType.NUMBERIC)
             case ParseState.IDENTIFIER:
                 return generateTokenForIdentifier(buffer.toString())
             case ParseState.STRING:
@@ -224,63 +229,112 @@ class Laxer {
                 errors << generateError(TokenType.STRING,'String end excepted.')
                 return null;
             case ParseState.COMMENT:
-                return new Token(buffer.toString(),TokenType.COMMENT)
+                return generateToken(buffer.toString(),TokenType.COMMENT)
         }
 
     }
 
 
-    private Token generateTokenForIdentifier(String identifier){
+    private static Token generateTokenForIdentifier(String identifier){
         def upperCase = identifier.toUpperCase()
         if (upperCase in KEY_IDENTIFIERS){
             def type = TokenType.valueOf(upperCase)
-            return new Token(identifier,type)
+            return generateToken(identifier,type)
         }else {
-            return new Token(identifier,TokenType.IDENTIFIER)
+            return generateToken(identifier,TokenType.IDENTIFIER)
         }
     }
 
-    private Character peekChar() throws ReachTheEndOfCodeException{
-        if (mCharBuffer.isEmpty()) {
+    private Character peekChar(){
+        if (charBuffer.isEmpty()) {
             inflateCharBuffer(DEFAULT_CHAR_BUFFER_SIZE)
         }
 
-        if (mCharBuffer.isEmpty()) {
-            return null
+        if (charBuffer.isEmpty()) {
+            throw new ReachTheEndOfCodeException()
         }
 
-        mCharBuffer.first()
+        charBuffer.first()
     }
 
-    private Character takeChar() throws ReachTheEndOfCodeException {
+    private Character takeChar(){
 
-        if (mCharBuffer.isEmpty()) {
+        if (charBuffer.isEmpty()) {
             inflateCharBuffer(DEFAULT_CHAR_BUFFER_SIZE)
         }
 
-        if (mCharBuffer.isEmpty()) {
-            return null
+        if (charBuffer.isEmpty()) {
+            throw new ReachTheEndOfCodeException()
         }
 
-        mCharBuffer.remove(0)
+        charBuffer.remove(0)
     }
 
-    boolean hasNext(){
+    private boolean hasNextChar(){
         return peekChar() != null
     }
 
     private void backforwardChar(char chr){
         if (col - 1 > 0)
             col--
-        mCharBuffer.add(0,chr)
+        charBuffer.add(0,chr)
     }
 
     private void inflateCharBuffer(int size){
         int count = 0;
         char chr;
         while (count++ < size && (chr = mStreamReader.read()) != -1){
-            mCharBuffer << chr
+            charBuffer << chr
         }
+    }
+
+    public boolean hasNext(){
+        peekToken() != null
+    }
+
+    public Token takeToken() {
+        if (tokenBuffer.isEmpty()){
+            inflateBuffer(DEFAULT_TOKEN_BUFFER_SIZE)
+        }
+
+        if (tokenBuffer.isEmpty()) {
+            return null
+        }
+
+        return tokenBuffer.remove(0)
+    }
+
+    public Token peekToken() {
+        if (tokenBuffer.isEmpty()){
+            inflateBuffer(DEFAULT_TOKEN_BUFFER_SIZE)
+        }
+
+        if (tokenBuffer.isEmpty()) {
+            return null
+        }
+
+        return tokenBuffer.remove(0)
+    }
+
+
+
+    private void inflateBuffer(int size) {
+        def count = 0
+        while (count++ < size && hasNextChar()){
+            tokenBuffer << getToken()
+        }
+    }
+
+    Token generateToken(TokenType type){
+        def token = new Token(type)
+        token.col = col
+        token.row = row
+        token
+    }
+    Token generateToken(String value, TokenType type) {
+        def token = generateToken(type)
+        token.value = value
+        token
     }
 
     CodeError generateError(TokenType type,String msg){
