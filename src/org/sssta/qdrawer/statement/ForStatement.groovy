@@ -11,9 +11,9 @@ import org.sssta.qdrawer.statement.expression.Expression
  */
 class ForStatement extends Statement {
 
-    Token forVarible;
-    Expression start,end,step;
-    PointExpression pointExpression;
+    Token forVariable
+    Expression start,end,step
+    List<Statement> statements
 
     static ForStatement parse(Laxer laxer, List<CodeError> errors) {
 
@@ -31,7 +31,7 @@ class ForStatement extends Statement {
             return null
         }
 
-        laxer.takeToken()
+        statement.forVariable = laxer.takeToken()
 
         if (!laxer.peekToken().type == TokenType.FROM) {
             errors << new CodeError(col: laxer.col, row: laxer.row, message: 'Excepted from symbol.')
@@ -40,9 +40,60 @@ class ForStatement extends Statement {
 
         laxer.takeToken()
 
+        def start = Expression.parse(laxer,errors)
+        if (start == null) {
+            errors << new CodeError(col: laxer.col, row: laxer.row, message: 'Excepted an expression.')
+            return null
+        }
+
+        statement.start = start
+
+        if (!laxer.peekToken().type == TokenType.TO) {
+            errors << new CodeError(col: laxer.col, row: laxer.row, message: 'Excepted to symbol.')
+            return null
+        }
+
+        laxer.takeToken()
+
+        def end = Expression.parse(laxer,errors)
+        if (start == null) {
+            errors << new CodeError(col: laxer.col, row: laxer.row, message: 'Excepted an expression.')
+            return null
+        }
+
+        statement.end = end
+
+
+        if (!laxer.peekToken().type == TokenType.STEP) {
+            errors << new CodeError(col: laxer.col, row: laxer.row, message: 'Excepted step symbol.')
+            return null
+        }
+
+        laxer.takeToken()
+
+        def step = Expression.parse(laxer,errors)
+        if (start == null) {
+            errors << new CodeError(col: laxer.col, row: laxer.row, message: 'Excepted an expression.')
+            return null
+        }
+
+        statement.step = step
+
+        if (!laxer.peekToken().type == TokenType.OPEN_SCOPE) {
+            errors << new CodeError(col: laxer.col, row: laxer.row, message: 'Excepted {.')
+            return null
+        }
+        laxer.takeToken()
 
 
 
+
+
+        if (!laxer.peekToken().type == TokenType.CLOSE_SCOPE) {
+            errors << new CodeError(col: laxer.col, row: laxer.row, message: 'Excepted }.')
+            return null
+        }
+        laxer.takeToken()
 
         return statement
     }

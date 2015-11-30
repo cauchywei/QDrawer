@@ -5,10 +5,10 @@ package org.sssta.qdrawer.lexer
  */
 enum TokenType {
 
-    UNKNOWN('Unknown'),
+    UNKNOWN('unknown'),
 
     IMPORT('import'),
-    USE('use'),
+    USING('using'),
     MODULE('module'),
     CONST('const'),
 
@@ -39,6 +39,8 @@ enum TokenType {
 
     OPEN_BRACKET('('),
     CLOSE_BRACKET(')'),
+    OPEN_SCOPE('{'),
+    CLOSE_SCOPE('}'),
     SEMICO(';'),
     COMMA(','),
 

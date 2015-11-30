@@ -4,22 +4,27 @@ import org.sssta.qdrawer.exception.IllegalDeclarationException
 import org.sssta.qdrawer.lexer.CodeError
 import org.sssta.qdrawer.lexer.Laxer
 import org.sssta.qdrawer.lexer.TokenType
+import org.sssta.qdrawer.statement.AssignmentStatement
+import org.sssta.qdrawer.statement.ConstantDeclarationStatement
+import org.sssta.qdrawer.statement.ForStatement
 import org.sssta.qdrawer.statement.ImportStatement
+import org.sssta.qdrawer.statement.InvokeStatement
 import org.sssta.qdrawer.statement.ModuleStatement
+import org.sssta.qdrawer.statement.expression.Expression
+import org.sssta.qdrawer.statement.expression.InvokeExpression
+
 /**
  * Created by cauchywei on 15/9/10.
  */
 class Parser {
 
-    static final int DEFAULT_TOKEN_BUFFER_SIZE = 20
-
     Laxer laxer
-    InputStreamReader inputStreamReader
+    InputStream inputStream
     List<CodeError> errors = []
 
-    Parser(InputStreamReader inputStreamReader) {
-        this.inputStreamReader = inputStreamReader
-        laxer = new Laxer(inputStreamReader)
+    Parser(InputStream inputStream) {
+        this.inputStream = inputStream
+        laxer = new Laxer(inputStream)
     }
 
     Module parse(){
@@ -38,14 +43,30 @@ class Parser {
             switch (token.getType()) {
 
                 case TokenType.CONST:
-                case TokenType.ORIGIN:
-                case TokenType.SCALE:
-                case TokenType.ROT:
-                case TokenType.T:
-                case TokenType.IDENTIFIER:
+                    module.statements << ConstantDeclarationStatement.parse(laxer,errors)
+                    break;
+                case {token.isIdentifier()}:
 
+                    def save = laxer.save()
+                    laxer.takeToken()
+                    if (laxer.peekToken()?.type == TokenType.IS || laxer.peekToken()?.type == TokenType.ASSIGMENT) {
+                        laxer.go2(save)
+                        module.statements << AssignmentStatement.parse(laxer,errors)
+                        break
+                    }
+
+                    laxer.go2(save)
+
+                    def expr = Expression.parse(laxer, errors)
+
+                    if (expr instanceof InvokeExpression) {
+                        module.statements << new InvokeStatement(invokeExpression: expr)
+                    } else {
+                        //ingore
+                    }
                     break
                 case TokenType.FOR:
+                    module.statements << ForStatement.parse(laxer,errors)
                     break
                 case TokenType.FUNC:
                     break
@@ -58,7 +79,6 @@ class Parser {
                 default:
                     throw new IllegalDeclarationException(token.value + ' declaration or statement not allowed here. at line ' + token.row)
             }
-            matchSemico()
         }
 
         return module

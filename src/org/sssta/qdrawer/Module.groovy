@@ -11,6 +11,8 @@ class Module extends Statement {
     String name
     ModuleStatement moduleStatement
     List<ImportStatement> importStatements = []
+    List<Statement> statements = []
+
 
 //    @Override
 //    GrammarSymbol createSymbol(boolean secondary) {

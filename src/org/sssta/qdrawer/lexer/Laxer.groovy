@@ -22,7 +22,7 @@ class Laxer {
 
     public static final def KEY_IDENTIFIERS =[TokenType.MODULE    .name(),
                                               TokenType.IMPORT    .name(),
-                                              TokenType.USE       .name(),
+                                              TokenType.USING       .name(),
                                               TokenType.FUNC      .name(),
                                               TokenType.CONST     .name(),
                                               TokenType.IS        .name(),
@@ -71,6 +71,10 @@ class Laxer {
                             return generateToken(TokenType.OPEN_BRACKET)
                         case ')':
                             return generateToken(TokenType.CLOSE_BRACKET)
+                        case '{':
+                            return generateToken(TokenType.OPEN_SCOPE)
+                        case '}':
+                            return generateToken(TokenType.CLOSE_SCOPE)
                         case ',':
                             return generateToken(TokenType.COMMA)
                         case '+':
@@ -228,7 +232,7 @@ class Laxer {
 
                     break
                 case ParseState.IDENTIFIER:
-                    if (!(c ==~ /[a-zA-Z_0-9]/)) {
+                    if (!(c ==~ /[a-zA-Z_0-9\.]/)) {
                         backforwardChar(c)
                         return generateTokenForIdentifier(buffer.toString())
                     }else {

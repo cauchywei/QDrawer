@@ -22,6 +22,7 @@ class ExpressionTest extends GroovyTestCase{
         test("2/3","(/ 2 3)")
         test("1/2/3","(/ (/ 1 2) 3)")
         test("1/2*3/4","(/ (* (/ 1 2) 3) 4)")
+        test("(((((1)))))","1")
 
         test("x >= 2 && x < 10","(&& (>= x 2) (< x 10))")
         test("(year%4==0 && year%100!=0) || (year%400==0)","(|| (&& (== (% year 4) 0) (!= (% year 100) 0)) (== (% year 400) 0))")
