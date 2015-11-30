@@ -44,12 +44,12 @@ class Laxer {
     List<Token> tokenBuffer = []
     List<CodeError> errors = []
     Stack<Token> usedTokens = []
-    InputStreamReader  mStreamReader
+    InputStream  mStreamReader
     int col = 1
     int row = 1
 
 
-    Laxer(InputStreamReader mStreamReader) {
+    Laxer(InputStream mStreamReader) {
         this.mStreamReader = mStreamReader
     }
 

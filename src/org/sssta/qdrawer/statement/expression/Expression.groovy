@@ -13,27 +13,27 @@ abstract class Expression {
         return  parseExpression(laxer,errors);
     }
 
-    static def parseExpression = { Laxer laxer, List<CodeError> errors ->
-        parseBinaryExpression(laxer,[BinaryOperator.OR],parseAndExpression,errors);
+    static parseExpression ( Laxer laxer, List<CodeError> errors) {
+        parseBinaryExpression(laxer,[BinaryOperator.OR],Expression.&parseAndExpression,errors);
     };
 
-    static def parseAndExpression = {Laxer laxer, List<CodeError> errors ->
-        parseBinaryExpression(laxer,[BinaryOperator.AND],parseCompareExpression,errors);
+    static parseAndExpression (Laxer laxer, List<CodeError> errors) {
+        parseBinaryExpression(laxer,[BinaryOperator.AND],Expression.&parseCompareExpression,errors);
     }
 
-    static def parseCompareExpression = {Laxer laxer, List<CodeError> errors ->
-        parseBinaryExpression(laxer,[BinaryOperator.LT,BinaryOperator.LTE,BinaryOperator.GT,BinaryOperator.GTE,BinaryOperator.EQ,BinaryOperator.NE],parseBaseTerm,errors);
+    static parseCompareExpression (Laxer laxer, List<CodeError> errors) {
+        parseBinaryExpression(laxer,[BinaryOperator.LT,BinaryOperator.LTE,BinaryOperator.GT,BinaryOperator.GTE,BinaryOperator.EQ,BinaryOperator.NE],Expression.&parseBaseTerm,errors);
     }
 
-    static def parseBaseTerm = {Laxer laxer, List<CodeError> errors ->
-        parseBinaryExpression(laxer,[BinaryOperator.PLUS,BinaryOperator.MINUS],parseTerm,errors);
+    static parseBaseTerm (Laxer laxer, List<CodeError> errors) {
+        parseBinaryExpression(laxer,[BinaryOperator.PLUS,BinaryOperator.MINUS],Expression.&parseTerm,errors);
     }
 
-    static def parseTerm = {Laxer laxer, List<CodeError> errors ->
-        parseBinaryExpression(laxer,[BinaryOperator.MUL,BinaryOperator.DIV,BinaryOperator.MOD],parseFactor,errors);
+    static parseTerm (Laxer laxer, List<CodeError> errors) {
+        parseBinaryExpression(laxer,[BinaryOperator.MUL,BinaryOperator.DIV,BinaryOperator.MOD],Expression.&parseFactor,errors);
     }
 
-    static def parseFactor = {Laxer laxer, List<CodeError> errors ->
+    static parseFactor (Laxer laxer, List<CodeError> errors) {
         def token = laxer.peekToken()
 
         if (token?.type == TokenType.PLUS || token?.type == TokenType.MINUS || token?.type == TokenType.NOT) {
@@ -48,13 +48,13 @@ abstract class Expression {
             unaryExpression.expression = expr
             return unaryExpression
         } else {
-            return Expression.parseComponent(laxer,errors)
+            return parseComponent(laxer,errors)
         }
     }
 
-    static def parseComponent = {Laxer laxer, List<CodeError> errors ->
+    static parseComponent (Laxer laxer, List<CodeError> errors ){
 
-        def atomExpr = Expression.parseAtom(laxer ,errors)
+        def atomExpr = parseAtom(laxer ,errors)
         if (atomExpr == null) {
             return null
         }
@@ -75,26 +75,26 @@ abstract class Expression {
 
     }
 
-    static def parseAtom = {Laxer laxer, List<CodeError> errors ->
+    static parseAtom (Laxer laxer, List<CodeError> errors) {
         def next = laxer.takeToken()
 
         if (next?.isIdentifier()) {
 
-            def id = new VariableExpression(identifier: id)
+            def var = new VariableExpression(identifier: next)
             if (laxer.peekToken()?.type != TokenType.OPEN_BRACKET) {
-                return id
+                return var
             } else {
 
-                def func = new InvokeExpression(function: id)
+                def func = new InvokeExpression(function: var)
                 def args = []
                 func.arguments = args
                 laxer.takeToken()
-                def arg = Expression.parseExpression(laxer, errors)
+                def arg = parseExpression(laxer, errors)
                 if (arg != null) {
                     args << arg
                     while (laxer.peekToken()?.type == TokenType.COMMA) {
                         laxer.takeToken()
-                        arg = Expression.parseExpression(laxer,errors)
+                        arg = parseExpression(laxer,errors)
                         if (arg == null) {
                             errors << new CodeError(row :laxer.row,col :laxer.col,message: "Excepted an argument.")
                             return null
@@ -118,7 +118,7 @@ abstract class Expression {
             return new LiteralExpression(token: next)
         } else if (next?.type == TokenType.OPEN_BRACKET) {
 
-            def expr = Expression.parseExpression(laxer,errors)
+            def expr = parseExpression(laxer,errors)
 
             if (laxer.peekToken()?.type != TokenType.CLOSE_BRACKET) {
                 errors << new CodeError(row :laxer.row,col :laxer.col,message: "Excepted ).")
@@ -143,10 +143,10 @@ abstract class Expression {
 
             def optToken = laxer.peekToken()
 
-            if (binaryOperators.any({ optToken?.value == it.toString() })) {
+            while( (binaryOperators.any({ optToken?.value == it.opt }))) {
                 def opt = laxer.takeToken()
                 BinaryExpression binaryExpression = new BinaryExpression()
-                binaryExpression.opt = BinaryOperator.valueOf(opt.value)
+                binaryExpression.opt = BinaryOperator.find({it.opt == opt.value})
 
                 binaryExpression.left = left
 
@@ -157,12 +157,11 @@ abstract class Expression {
                 }
 
                 binaryExpression.right = right
+                left = binaryExpression
 
-                return binaryExpression
-            } else {
-                return left
+                optToken = laxer.peekToken()
             }
-
+            return left
         } else {
             errors << new CodeError(row :laxer.row,col :laxer.col,message: "Excepted an illegal expression.")
             return null
