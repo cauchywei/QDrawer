@@ -50,11 +50,11 @@ enum TokenType {
     POWER('**'),
 
     NOT('!'),
-    UE('!='),
+    NE('!='),
 
     LT('<'),
     GT('>'),
-    EQ('='),
+    EQ('=='),
     LTE('<='),
     GTE('>='),
 

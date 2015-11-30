@@ -12,7 +12,7 @@ class LaxerTest extends GroovyTestCase{
     @Test
     void testCorrectToken() {
 
-        def code = 'import imPOrt const is origin scale rot for from to t step draw hello 233 CPP14 Ja_VA "hello world!" "hello\\tworld\\n" "he1llo\t wor34ld" \n  22.3 22e3 22E3 +-*/%** ()  > < >= <= = != ! or and   -- QAQ \n// 23333333333\n'
+        def code = 'import imPOrt const is origin scale rot for from to t step draw hello 233 CPP14 Ja_VA "hello world!" "hello\\tworld\\n" "he1llo\t wor34ld" \n  22.3 22e3 22E3 +-*/%** ()  > < >= <= == != ! or and   -- QAQ \n// 23333333333\n'
         def reader = new InputStreamReader(new StringInputStream(code))
         def laxer = new Laxer(reader)
 
@@ -52,8 +52,8 @@ class LaxerTest extends GroovyTestCase{
         matchToken(laxer, '<', TokenType.LT)
         matchToken(laxer, '>=', TokenType.GTE)
         matchToken(laxer, '<=', TokenType.LTE)
-        matchToken(laxer, '=', TokenType.EQ)
-        matchToken(laxer, '!=', TokenType.UE)
+        matchToken(laxer, '==', TokenType.EQ)
+        matchToken(laxer, '!=', TokenType.NE)
         matchToken(laxer, '!', TokenType.NOT)
         matchToken(laxer, 'or', TokenType.OR)
         matchToken(laxer, 'and', TokenType.AND)

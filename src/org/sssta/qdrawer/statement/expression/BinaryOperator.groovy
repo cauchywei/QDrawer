@@ -12,17 +12,19 @@ enum BinaryOperator {
     MOD('%'),
     AND('and'),
     OR('or'),
-    POWER('**'),
 
     LT('<'),
     GT('>'),
     EQ('=='),
+    NE('!='),
     LTE('<='),
     GTE('>=')
+
 
     String opt
 
     BinaryOperator(String opt) {
         this.opt = opt
     }
+
 }

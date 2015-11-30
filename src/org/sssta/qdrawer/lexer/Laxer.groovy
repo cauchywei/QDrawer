@@ -105,7 +105,13 @@ class Laxer {
                         case '%':
                             return generateToken(TokenType.MOD)
                         case '=':
-                            return generateToken(TokenType.EQ)
+                            def next = peekChar()
+                            if (next == '='){
+                                takeChar()
+                                return generateToken(TokenType.EQ)
+                            }else {
+                                return generateToken(TokenType.ASSIGMENT)
+                            }
                         case '>':
                             def next = peekChar()
                             if (next == '='){
@@ -126,7 +132,7 @@ class Laxer {
                             def next = peekChar()
                             if (next == '='){
                                 takeChar()
-                                return generateToken(TokenType.UE)
+                                return generateToken(TokenType.NE)
                             }else {
                                 return generateToken(TokenType.NOT)
                             }
