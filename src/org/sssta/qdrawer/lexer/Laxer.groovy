@@ -34,6 +34,8 @@ class Laxer {
                                               TokenType.FROM      .name(),
                                               TokenType.TO        .name(),
                                               TokenType.DRAW      .name(),
+                                              TokenType.AND       .name(),
+                                              TokenType.OR        .name(),
                                               TokenType.STEP      .name()]
 
     List<Character> charBuffer = []
@@ -101,6 +103,32 @@ class Laxer {
                             }
                         case '%':
                             return generateToken(TokenType.MOD)
+                        case '=':
+                            return generateToken(TokenType.EQ)
+                        case '>':
+                            def next = peekChar()
+                            if (next == '='){
+                                takeChar()
+                                return generateToken(TokenType.GTE)
+                            }else {
+                                return generateToken(TokenType.GT)
+                            }
+                        case '<':
+                            def next = peekChar()
+                            if (next == '='){
+                                takeChar()
+                                return generateToken(TokenType.LTE)
+                            }else {
+                                return generateToken(TokenType.LT)
+                            }
+                        case '!':
+                            def next = peekChar()
+                            if (next == '='){
+                                takeChar()
+                                return generateToken(TokenType.EQ)
+                            }else {
+                                return generateToken(TokenType.UE)
+                            }
                         case ';':
                             return generateToken(TokenType.SEMICO)
                         case '"':

@@ -49,9 +49,12 @@ enum TokenType {
     OR('or'),
     POWER('**'),
 
+    NOT('!'),
+    UE('!='),
+
     LT('<'),
     GT('>'),
-    EQ('=='),
+    EQ('='),
     LTE('<='),
     GTE('>='),
 
