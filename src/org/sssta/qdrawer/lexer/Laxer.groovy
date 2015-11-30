@@ -143,8 +143,7 @@ class Laxer {
                         case '"':
                             state = ParseState.STRING
                             break
-
-                        case Character.isDigit(c):
+                        case {Character.isDigit(c)}:
                             buffer << c
                             state = ParseState.NUMERIC
                             break;
@@ -306,7 +305,7 @@ class Laxer {
         }
 
         if (charBuffer.isEmpty()) {
-            throw new ReachTheEndOfCodeException()
+            return null
         }
 
         charBuffer.remove(0)
@@ -359,7 +358,7 @@ class Laxer {
             return null
         }
 
-        return tokenBuffer.remove(0)
+        return tokenBuffer.get(0)
     }
 
 
