@@ -1,6 +1,5 @@
 import org.apache.tools.ant.filters.StringInputStream
 import org.junit.Test
-import org.sssta.qdrawer.lexer.CodeError
 import org.sssta.qdrawer.lexer.Laxer
 import org.sssta.qdrawer.statement.expression.Expression
 /**
@@ -10,30 +9,31 @@ class ExpressionTest extends GroovyTestCase{
 
     @Test
     void testCorrectExpression() {
-        def code = "1"
+
+        test("1","1")
+        test("2+3","(+ 2 3)")
+        test("1+2+3","(+ (+ 1 2) 3)")
+        test("1+2+3+4","(+ (+ (+ 1 2) 3) 4)")
+
+        test("1*2+3","(+ (* 1 2) 3)")
+        test("1+2*3","(+ 1 (* 2 3))")
+        test("1+2*3+4","(+ (+ 1 (* 2 3)) 4)")
+
+        test("2/3","(/ 2 3)")
+        test("1/2/3","(/ (/ 1 2) 3)")
+        test("1/2*3/4","(/ (* (/ 1 2) 3) 4)")
+
+        test("x >= 2 and x < 10","(and (>= x 2) (< x 10))")
+        test("(year%4==0 and year%100!=0) or (year%400==0)","(or (and (== (% year 4) 0) (!= (% year 100) 0)) (== (% year 400) 0))")
+
+
+    }
+
+    static void test(String code,excepted) {
+        def errors = []
         def laxer = new Laxer(new StringInputStream(code))
-        List<CodeError> errors = []
-
-        def exp = Expression.parse(laxer, errors)
+        assertEquals(excepted,Expression.parse(laxer, errors).toString())
         assertEquals(0,errors.size())
-        assertEquals("1",exp.toString())
-
-
-        code = "2+3"
-        laxer = new Laxer(new StringInputStream(code))
-        errors = []
-
-        exp = Expression.parse(laxer, errors)
-        assertEquals("(+ 2 3)",exp.toString())
-
-        code = "1+2+3"
-        laxer = new Laxer(new StringInputStream(code))
-        errors = []
-
-        exp = Expression.parse(laxer, errors)
-        assertEquals("(+ (+ 1 2) 3)",exp.toString())
-
-
     }
 
 }
