@@ -22,6 +22,8 @@ class Laxer {
 
     public static final def KEY_IDENTIFIERS =[TokenType.MODULE    .name(),
                                               TokenType.IMPORT    .name(),
+                                              TokenType.USE       .name(),
+                                              TokenType.FUNC      .name(),
                                               TokenType.CONST     .name(),
                                               TokenType.IS        .name(),
                                               TokenType.ORIGIN    .name(),
@@ -235,7 +237,7 @@ class Laxer {
     }
 
 
-    private static Token generateTokenForIdentifier(String identifier){
+    private Token generateTokenForIdentifier(String identifier){
         def upperCase = identifier.toUpperCase()
         if (upperCase in KEY_IDENTIFIERS){
             def type = TokenType.valueOf(upperCase)

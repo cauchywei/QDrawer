@@ -20,4 +20,18 @@ class Token {
         this.type = type
     }
 
+    boolean isIdentifier() {
+        switch (type) {
+
+            case TokenType.ORIGIN:
+            case TokenType.SCALE:
+            case TokenType.ROT:
+            case TokenType.T:
+            case TokenType.IDENTIFIER:
+                return true
+            default:
+                return false
+        }
+    }
+
 }

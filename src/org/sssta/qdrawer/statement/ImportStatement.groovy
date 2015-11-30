@@ -13,10 +13,8 @@ import org.sssta.qdrawer.lexer.TokenType
 class ImportStatement extends Statement{
 
 
-    @Override
-    String getName() {
-        return null
-    }
+    String name;
+
 
     static ImportStatement parse(Laxer laxer, List<CodeError> errors) {
         def statement = new ImportStatement()

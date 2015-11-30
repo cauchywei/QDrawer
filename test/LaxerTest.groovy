@@ -75,7 +75,7 @@ class LaxerTest extends GroovyTestCase{
 
     @Test
     void testBadToken(){
-
+        
         catchError('3Q',2,TokenType.NUMBERIC)
         catchError('😳',1,TokenType.UNKNOWN)
         catchError('23.2.',5,TokenType.NUMBERIC)

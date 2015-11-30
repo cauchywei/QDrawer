@@ -1,4 +1,6 @@
 package org.sssta.qdrawer
+
+import org.sssta.qdrawer.exception.IllegalDeclarationException
 import org.sssta.qdrawer.lexer.CodeError
 import org.sssta.qdrawer.lexer.Laxer
 import org.sssta.qdrawer.lexer.TokenType
@@ -28,6 +30,35 @@ class Parser {
         matchSemico()
         while (laxer.peekToken() == TokenType.IMPORT) {
             module.importStatements << ImportStatement.parse(laxer, errors)
+            matchSemico()
+        }
+
+        while (laxer.hasNext()) {
+            def token = laxer.peekToken()
+            switch (token.getType()) {
+
+                case TokenType.CONST:
+                case TokenType.ORIGIN:
+                case TokenType.SCALE:
+                case TokenType.ROT:
+                case TokenType.T:
+                case TokenType.IDENTIFIER:
+
+                    break
+                case TokenType.FOR:
+                    break
+                case TokenType.FUNC:
+                    break
+                case TokenType.SEMICO:
+                    break
+                case TokenType.COMMENT:
+                    laxer.takeToken()
+                    continue
+                    break
+                default:
+                    throw new IllegalDeclarationException(token.value + ' declaration or statement not allowed here. at line ' + token.row)
+            }
+            matchSemico()
         }
 
         return module
@@ -35,7 +66,7 @@ class Parser {
 
     void matchSemico() {
         if (laxer.peekToken() == TokenType.SEMICO) {
-
+            laxer.takeToken()
         } else {
             errors << new CodeError(col: laxer.col, row: laxer.row,message: 'Excepted ; at line ' + laxer.row)
         }

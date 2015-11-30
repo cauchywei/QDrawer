@@ -8,6 +8,7 @@ enum TokenType {
     UNKNOWN('Unknown'),
 
     IMPORT('import'),
+    USE('use'),
     MODULE('module'),
     CONST('const'),
 
@@ -24,10 +25,13 @@ enum TokenType {
     DRAW('draw'),
     STEP('step'),
 
+    FUNC("func"),
+
     NUMBERIC('numeric'),
     STRING('string'),
 
     IDENTIFIER('identifier'),
+
 
 
 
@@ -41,7 +45,15 @@ enum TokenType {
     MUL('*'),
     DIV('/'),
     MOD('%'),
+    AND('and'),
+    OR('or'),
     POWER('**'),
+
+    LT('<'),
+    GT('>'),
+    EQ('=='),
+    LTE('<='),
+    GTE('>='),
 
     COMMENT('comment'),
     ASSIGMENT('=')
@@ -56,5 +68,6 @@ enum TokenType {
     TokenType(String id) {
         this.identifier = id
     }
+
 
 }
