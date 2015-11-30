@@ -12,11 +12,11 @@ class ModuleStatement extends Statement {
 
     static ModuleStatement parse(Laxer laxer, List<CodeError> errors) {
         def statement = new ModuleStatement()
-        if (laxer.peekToken().type != TokenType.MODULE) {
+        if (laxer.peekToken()?.type != TokenType.MODULE) {
             errors << new CodeError(col: laxer.col, row: laxer.row, message: 'Excepted module declaration.')
         } else {
             statement.keyToken = laxer.takeToken()
-            if (laxer.hasNext() && laxer.peekToken().type == TokenType.IDENTIFIER){
+            if (laxer.peekToken()?.type == TokenType.IDENTIFIER){
                 statement.name = laxer.takeToken().value
             }else {
                 errors << new CodeError(col: laxer.col, row: laxer.row, message: 'Excepted module name.')

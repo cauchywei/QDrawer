@@ -14,11 +14,11 @@ class ImportStatement extends Statement{
 
     static ImportStatement parse(Laxer laxer, List<CodeError> errors) {
         def statement = new ImportStatement()
-        if (laxer.peekToken().type != TokenType.IMPORT) {
+        if (laxer.peekToken()?.type != TokenType.IMPORT) {
             errors << new CodeError(col: laxer.col, row: laxer.row, message: 'Excepted import declaration.')
         } else {
             statement.keyToken = laxer.takeToken()
-            if (laxer.hasNext() && laxer.peekToken().type == TokenType.IDENTIFIER){
+            if (laxer.peekToken()?.type == TokenType.IDENTIFIER){
                 statement.name = laxer.takeToken().value
             }else {
                 errors << new CodeError(col: laxer.col, row: laxer.row, message: 'Excepted import lib name.')
