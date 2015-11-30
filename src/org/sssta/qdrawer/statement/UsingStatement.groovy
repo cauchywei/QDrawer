@@ -17,21 +17,17 @@ class UsingStatement extends Statement{
         if (laxer.peekToken()?.type != TokenType.USING) {
             errors << new CodeError(col: laxer.col, row: laxer.row, message: 'Excepted import declaration.')
         } else {
-            statement.keyToken = laxer.takeToken()
             if (laxer.peekToken()?.type == TokenType.IDENTIFIER){
                 statement.library = laxer.takeToken()
             }else {
                 errors << new CodeError(col: laxer.col, row: laxer.row, message: 'Excepted import lib name.')
+                return null
             }
         }
 
         return statement
     }
 
-    @Override
-    String getName() {
-       library.value
-    }
 //    @Override
 //    GrammarSymbol createSymbol(boolean secondary) {
 //        return null
