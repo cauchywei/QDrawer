@@ -1,7 +1,6 @@
 package org.sssta.qdrawer.statement.expression
 import org.sssta.qdrawer.lexer.CodeError
 import org.sssta.qdrawer.lexer.Laxer
-import org.sssta.qdrawer.lexer.Token
 import org.sssta.qdrawer.lexer.TokenType
 /**
  * Created by cauchywei on 15/9/14.
@@ -11,15 +10,10 @@ abstract class Expression {
     boolean isConst = false;
 
     static Expression parse(Laxer laxer, List<CodeError> errors) {
-
-
-
-        return  expression;
+        return  expression(laxer,errors);
     }
 
-
-
-    static def orExpr = { Laxer laxer, List<CodeError> errors ->
+    static def expression = { Laxer laxer, List<CodeError> errors ->
         parseBinaryExpression(laxer,[BinaryOperator.OR],andExpr,errors);
     };
 
@@ -86,8 +80,54 @@ abstract class Expression {
 
         if (next?.isIdentifier()) {
 
-        }else if (next.type == TokenType.OPEN_BRACKET) {
+            def id = new VariableExpression(identifier: id)
+            if (laxer.peekToken()?.type != TokenType.OPEN_BRACKET) {
+                return id
+            } else {
 
+                def func = new InvokeExpression(function: id)
+                def args = []
+                func.arguments = args
+                laxer.takeToken()
+                def arg = expression(laxer, errors)
+                if (arg != null) {
+                    args << arg
+                    while (laxer.peekToken()?.type == TokenType.COMMA) {
+                        laxer.takeToken()
+                        arg = expression(laxer,errors)
+                        if (arg == null) {
+                            errors << new CodeError(row :laxer.row,col :laxer.col,message: "Excepted an argument.")
+                            return null
+                        }
+                        args << arg
+                    }
+                }
+
+                if (laxer.peekToken()?.type != TokenType.CLOSE_BRACKET) {
+                    errors << new CodeError(row :laxer.row,col :laxer.col,message: "Excepted ).")
+                    return null
+                }
+
+                laxer.takeToken()
+                return func
+
+            }
+
+
+        }else if (next?.isLiteral()){
+            return new LiteralExpression(token: next)
+        } else if (next.type == TokenType.OPEN_BRACKET) {
+
+            def expr = expression(laxer,errors)
+
+            if (laxer.peekToken()?.type != TokenType.CLOSE_BRACKET) {
+                errors << new CodeError(row :laxer.row,col :laxer.col,message: "Excepted ).")
+                return null
+            }
+
+            laxer.takeToken()
+
+            return expr
         } else {
             return null
         }
@@ -96,7 +136,7 @@ abstract class Expression {
 
 
     static Expression parseBinaryExpression(Laxer laxer, List<BinaryOperator> binaryOperators,def subExprFunc, List<CodeError> errors) {
-        Expression expression = null
+
         Expression left = subExprFunc(laxer,errors)
 
         if (left != null) {
@@ -128,29 +168,4 @@ abstract class Expression {
             return null
         }
     }
-
-    static Expression parseUnaryExpression(Laxer laxer, List<UnaryOperator> unaryOperatorList,def subExprFunc, List<CodeError> errors) {
-        Expression expression = null
-
-            def optToken = laxer.peekToken()
-
-            if (unaryOperatorList.any({ optToken?.value == it.toString() })) {
-                def opt = laxer.takeToken()
-                BinaryExpression binaryExpression = new BinaryExpression()
-                binaryExpression.opt = BinaryOperator.valueOf(opt.value)
-
-                binaryExpression.left = left
-
-                def right = subExprFunc(laxer, errors)
-
-                if (right == null) {
-                    errors << new CodeError(row :laxer.row,col :laxer.col,message: "Excepted an illegal right expression.")
-                }
-
-                binaryExpression.right = right
-            } else {
-                return left
-            }
-    }
-
 }

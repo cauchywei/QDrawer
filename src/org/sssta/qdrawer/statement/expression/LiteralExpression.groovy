@@ -1,15 +1,16 @@
 package org.sssta.qdrawer.statement.expression
 
+import org.sssta.qdrawer.lexer.Token
+
 /**
  * Created by cauchywei on 15/11/30.
  */
-class PowerExpression extends Expression {
-    Expression exponent
-    Expression base
+class LiteralExpression extends Expression {
+    Token token
 
 
     @Override
     public String toString() {
-        '(pow ' + base + ' ' + exponent + ')'
+        token.value;
     }
 }

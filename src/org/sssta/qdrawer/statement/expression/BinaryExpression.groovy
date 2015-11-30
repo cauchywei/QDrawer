@@ -4,5 +4,10 @@ package org.sssta.qdrawer.statement.expression
  */
 class BinaryExpression extends Expression {
     BinaryOperator opt;
-    Expression left,right;
+    Expression left, right;
+
+    @Override
+    String toString() {
+       '(' + opt.opt + ' ' + left + ' ' + right + ')'
+    }
 }

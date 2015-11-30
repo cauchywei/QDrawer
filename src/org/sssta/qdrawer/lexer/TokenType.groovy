@@ -29,6 +29,8 @@ enum TokenType {
 
     NUMBERIC('numeric'),
     STRING('string'),
+    TRUE('true'),
+    FALSE('false'),
 
     IDENTIFIER('identifier'),
 

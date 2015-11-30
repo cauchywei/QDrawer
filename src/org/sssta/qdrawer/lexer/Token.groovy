@@ -34,4 +34,16 @@ class Token {
         }
     }
 
+    boolean isLiteral() {
+        switch (type) {
+            case TokenType.STRING:
+            case TokenType.NUMBERIC:
+            case TokenType.TRUE:
+            case TokenType.FALSE:
+                return true
+            default:
+                return false
+        }
+    }
+
 }

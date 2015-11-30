@@ -6,4 +6,9 @@ package org.sssta.qdrawer.statement.expression
 class UnaryExpression extends Expression {
     UnaryOperator opt;
     Expression expression;
+
+    @Override
+    public String toString() {
+        "(" + opt +" " + expression +')';
+    }
 }
