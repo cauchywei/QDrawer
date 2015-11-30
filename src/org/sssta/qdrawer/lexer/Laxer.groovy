@@ -114,6 +114,24 @@ class Laxer {
                             }else {
                                 return generateToken(TokenType.ASSIGMENT)
                             }
+                        case '&':
+                            def next = peekChar()
+                            if (next == '&'){
+                                takeChar()
+                                return generateToken(TokenType.AND)
+                            }else {
+//                                return generateToken(TokenType.ASSIGMENT)
+                                return null
+                            }
+                        case '|':
+                            def next = peekChar()
+                            if (next == '|'){
+                                takeChar()
+                                return generateToken(TokenType.OR)
+                            }else {
+//                                return generateToken(TokenType.ASSIGMENT)
+                                return null
+                            }
                         case '>':
                             def next = peekChar()
                             if (next == '='){

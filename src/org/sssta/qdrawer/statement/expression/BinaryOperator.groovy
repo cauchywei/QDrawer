@@ -10,8 +10,8 @@ enum BinaryOperator {
     MUL('*'),
     DIV('/'),
     MOD('%'),
-    AND('and'),
-    OR('or'),
+    AND('&&'),
+    OR('||'),
 
     LT('<'),
     GT('>'),

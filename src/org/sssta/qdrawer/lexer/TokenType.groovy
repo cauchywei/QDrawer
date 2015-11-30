@@ -47,8 +47,8 @@ enum TokenType {
     MUL('*'),
     DIV('/'),
     MOD('%'),
-    AND('and'),
-    OR('or'),
+    AND('&&'),
+    OR('||'),
     POWER('**'),
 
     NOT('!'),

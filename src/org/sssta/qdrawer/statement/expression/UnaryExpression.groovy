@@ -9,6 +9,6 @@ class UnaryExpression extends Expression {
 
     @Override
     public String toString() {
-        "(" + opt +" " + expression +')';
+        "(" + opt.opt +" " + expression +')';
     }
 }
