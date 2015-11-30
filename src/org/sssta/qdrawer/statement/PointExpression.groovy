@@ -10,8 +10,5 @@ class PointExpression extends Expression{
     Token x;
     Token y;
 
-    @Override
-    double getValue() {
-        return 0
-    }
+
 }

@@ -41,6 +41,7 @@ class Laxer {
     List<Character> charBuffer = []
     List<Token> tokenBuffer = []
     List<CodeError> errors = []
+    Stack<Token> usedTokens = []
     InputStreamReader  mStreamReader
     int col = 1
     int row = 1
@@ -125,9 +126,9 @@ class Laxer {
                             def next = peekChar()
                             if (next == '='){
                                 takeChar()
-                                return generateToken(TokenType.EQ)
-                            }else {
                                 return generateToken(TokenType.UE)
+                            }else {
+                                return generateToken(TokenType.NOT)
                             }
                         case ';':
                             return generateToken(TokenType.SEMICO)
@@ -142,6 +143,9 @@ class Laxer {
                         case '\n':
                             row++
                             col = 0
+                            if (state == ParseState.COMMENT) {
+                                generateToken(buffer.toString(),TokenType.COMMENT);
+                            }
                         case '\t':
                         case '\r':
                         case ' ':
@@ -331,7 +335,11 @@ class Laxer {
             return null
         }
 
-        return tokenBuffer.remove(0)
+
+        def remove = tokenBuffer.remove(0)
+        usedTokens << remove
+
+        return remove
     }
 
     public Token peekToken() {
@@ -350,9 +358,14 @@ class Laxer {
 
     private void inflateBuffer(int size) {
         def count = 0
-        while (count++ < size && hasNextChar()){
-            tokenBuffer << getToken()
+        try {
+            while (count++ < size && hasNextChar()) {
+                tokenBuffer << getToken()
+            }
+        } catch (ReachTheEndOfCodeException e) {
+            //ignore
         }
+
     }
 
     Token generateToken(TokenType type){
@@ -369,6 +382,32 @@ class Laxer {
 
     CodeError generateError(TokenType type,String msg){
         new CodeError(col: col,row: row,message: msg,type: type)
+    }
+
+
+    int save() {
+        return usedTokens.size()
+    }
+
+    boolean go2(int index) {
+        if (index < 0) {
+            false
+        }
+
+        int origin = save();
+
+        try {
+            while (usedTokens.size() > index) {
+                tokenBuffer << usedTokens.pop()
+            }
+
+            while (usedTokens.size() < index) {
+                usedTokens.push tokenBuffer.remove(0)
+            }
+        } catch (Exception e) {
+            go2(origin);
+            return false
+        }
     }
 
 }

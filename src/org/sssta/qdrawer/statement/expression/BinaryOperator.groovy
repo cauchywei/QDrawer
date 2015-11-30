@@ -1,4 +1,4 @@
-package org.sssta.qdrawer.statement.expression.primitive
+package org.sssta.qdrawer.statement.expression
 
 /**
  * Created by cauchywei on 15/11/30.

@@ -1,15 +1,13 @@
 package org.sssta.qdrawer.statement
-
 import org.sssta.qdrawer.lexer.CodeError
 import org.sssta.qdrawer.lexer.Laxer
 import org.sssta.qdrawer.statement.expression.Expression
-import org.sssta.qdrawer.statement.expression.ReferenceExpression
 /**
  * Created by cauchywei on 15/9/14.
  */
 class AssignmentStatement extends Statement{
 
-    ReferenceExpression target
+//    ReferenceExpression target
     Expression valueExpresstion
 
 
