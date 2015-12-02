@@ -418,7 +418,7 @@ class Laxer {
         return usedTokens.size()
     }
 
-    boolean go2(int index) {
+    boolean go(int index) {
         if (index < 0) {
             false
         }
@@ -427,14 +427,14 @@ class Laxer {
 
         try {
             while (usedTokens.size() > index) {
-                tokenBuffer << usedTokens.pop()
+                tokenBuffer.add(0,usedTokens.pop())
             }
 
             while (usedTokens.size() < index) {
                 usedTokens.push tokenBuffer.remove(0)
             }
         } catch (Exception e) {
-            go2(origin);
+            go(origin);
             return false
         }
     }

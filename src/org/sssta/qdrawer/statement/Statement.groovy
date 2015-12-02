@@ -12,20 +12,10 @@ abstract class Statement extends CodeElement {
     static Statement parse(Laxer laxer, List<CodeError> errors) {
         def statement = null
 
-        while (laxer.hasNext()) {
             def token = laxer.peekToken()
             switch (token.getType()) {
                 case TokenType.CONST:
-                    return ConstantDeclarationStatement.parse(laxer,errors)
                 case {token.isIdentifier()}:
-                    def save = laxer.save()
-                    laxer.takeToken()
-                    if (laxer.peekToken()?.type == TokenType.IS || laxer.peekToken()?.type == TokenType.ASSIGMENT) {
-                        laxer.go2(save)
-                        return AssignmentStatement.parse(laxer,errors)
-                    }
-
-                    laxer.go2(save)
 
                     def expr = Expression.parse(laxer, errors)
 
@@ -36,7 +26,7 @@ abstract class Statement extends CodeElement {
                     }
 
                     if (laxer.peekToken()?.type != TokenType.COMMA) {
-                        errors << new CodeError(col:laxer.col,row: laxer.row)
+                        errors << new CodeError(col:laxer.col,row: laxer.row,message: 'Excepted ;')
                         return null
                     }
 
@@ -50,12 +40,10 @@ abstract class Statement extends CodeElement {
                 case TokenType.SEMICO:
                 case TokenType.COMMENT:
                     laxer.takeToken()
-                    continue
                     break
                 default:
                     return null
             }
-        }
         return null
     }
 }

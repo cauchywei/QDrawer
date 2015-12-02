@@ -7,9 +7,42 @@ import org.sssta.qdrawer.lexer.TokenType
  */
 abstract class Expression {
 
-    boolean isConst = false;
 
     static Expression parse(Laxer laxer, List<CodeError> errors) {
+
+        int saveIndex = laxer.save()
+
+
+        if (laxer.peekToken()?.type == TokenType.CONST || laxer.peekToken()?.isIdentifier()) {
+
+            def token = laxer.takeToken()
+            def assignmentExpression = new AssignmentExpression()
+
+            if (token.type == TokenType.CONST) {
+                assignmentExpression.isConst = true
+                if (!laxer.peekToken()?.isIdentifier()) {
+                    errors << new CodeError(col: laxer.col,row: laxer.row,message: 'Excepted a variable after const')
+                    return null
+                }
+
+                token = laxer.takeToken()
+            }
+
+            assignmentExpression.variable = new VariableExpression(identifier: token)
+
+
+            if (laxer.peekToken()?.type == TokenType.IS || laxer.peekToken()?.type == TokenType.ASSIGMENT) {
+                laxer.takeToken()
+
+                def expr = parse(laxer,[])
+                if (expr != null) {
+                    assignmentExpression.value = expr
+                    return assignmentExpression
+                }
+            }
+        }
+        laxer.go(saveIndex)
+
         return  parseExpression(laxer,errors);
     }
 

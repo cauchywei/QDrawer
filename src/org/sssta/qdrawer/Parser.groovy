@@ -4,8 +4,6 @@ import org.sssta.qdrawer.exception.IllegalDeclarationException
 import org.sssta.qdrawer.lexer.CodeError
 import org.sssta.qdrawer.lexer.Laxer
 import org.sssta.qdrawer.lexer.TokenType
-import org.sssta.qdrawer.statement.AssignmentStatement
-import org.sssta.qdrawer.statement.ConstantDeclarationStatement
 import org.sssta.qdrawer.statement.ForStatement
 import org.sssta.qdrawer.statement.ImportStatement
 import org.sssta.qdrawer.statement.InvokeStatement
@@ -46,16 +44,6 @@ class Parser {
                     module.statements << ConstantDeclarationStatement.parse(laxer,errors)
                     break;
                 case {token.isIdentifier()}:
-
-                    def save = laxer.save()
-                    laxer.takeToken()
-                    if (laxer.peekToken()?.type == TokenType.IS || laxer.peekToken()?.type == TokenType.ASSIGMENT) {
-                        laxer.go2(save)
-                        module.statements << AssignmentStatement.parse(laxer,errors)
-                        break
-                    }
-
-                    laxer.go2(save)
 
                     def expr = Expression.parse(laxer, errors)
 

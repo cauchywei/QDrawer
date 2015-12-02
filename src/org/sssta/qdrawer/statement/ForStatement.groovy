@@ -98,8 +98,4 @@ class ForStatement extends Statement {
         return statement
     }
 
-        @Override
-    String getName() {
-        'For'
-    }
 }
