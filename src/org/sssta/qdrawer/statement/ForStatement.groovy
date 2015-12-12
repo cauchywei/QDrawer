@@ -13,7 +13,7 @@ class ForStatement extends Statement {
 
     Token forVariable
     Expression start,end,step
-    List<Statement> statements
+    ScopeStatement scopeStatement
 
     static ForStatement parse(Laxer laxer, List<CodeError> errors) {
 
@@ -79,21 +79,13 @@ class ForStatement extends Statement {
 
         statement.step = step
 
-        if (!laxer.peekToken().type == TokenType.OPEN_SCOPE) {
-            errors << new CodeError(col: laxer.col, row: laxer.row, message: 'Excepted {.')
+        def scopestat = ScopeStatement.parse(laxer, errors)
+
+        if (scopestat == null) {
             return null
         }
-        laxer.takeToken()
 
-
-
-
-
-        if (!laxer.peekToken().type == TokenType.CLOSE_SCOPE) {
-            errors << new CodeError(col: laxer.col, row: laxer.row, message: 'Excepted }.')
-            return null
-        }
-        laxer.takeToken()
+        statement.scopeStatement = scopestat
 
         return statement
     }
