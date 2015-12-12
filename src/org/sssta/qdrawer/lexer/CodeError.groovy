@@ -1,4 +1,7 @@
 package org.sssta.qdrawer.lexer
+
+import org.sssta.qdrawer.ast.node.Node
+
 /**
  * Created by cauchywei on 15/9/9.
  */
@@ -16,6 +19,12 @@ class CodeError {
         row = token.row
         type = token.type
 
+        this.message = message
+    }
+
+    CodeError(Node node,String message) {
+        col = node.range.startCol
+        row = node.range.startCol
         this.message = message
     }
 
