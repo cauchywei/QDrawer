@@ -68,4 +68,9 @@ class IfStatement extends Statement {
 
         return statement
     }
+
+    @Override
+    Node createAstNode() {
+        return null
+    }
 }

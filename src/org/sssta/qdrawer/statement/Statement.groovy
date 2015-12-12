@@ -62,4 +62,6 @@ abstract class Statement extends CodeElement {
         }
         return null
     }
+
+    public abstract Node createAstNode();
 }

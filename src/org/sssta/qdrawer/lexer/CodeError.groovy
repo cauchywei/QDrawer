@@ -8,6 +8,17 @@ class CodeError {
     String message
     TokenType type
 
+    CodeError() {
+    }
+
+    CodeError(Token token,String message) {
+        col = token.col
+        row = token.row
+        type = token.type
+
+        this.message = message
+    }
+
     @Override
     public String toString() {
         return "Error{" +
