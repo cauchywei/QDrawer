@@ -48,7 +48,7 @@ abstract class Expression {
 
     static parseExpression ( Laxer laxer, List<CodeError> errors) {
         parseBinaryExpression(laxer,[BinaryOperator.OR],Expression.&parseAndExpression,errors);
-    };
+    }
 
     static parseAndExpression (Laxer laxer, List<CodeError> errors) {
         parseBinaryExpression(laxer,[BinaryOperator.AND],Expression.&parseCompareExpression,errors);

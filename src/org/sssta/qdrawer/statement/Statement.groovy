@@ -14,6 +14,9 @@ abstract class Statement extends CodeElement {
 
             def token = laxer.peekToken()
             switch (token.getType()) {
+                case TokenType.OPEN_SCOPE:
+
+                    break;
                 case TokenType.CONST:
                 case {token.isIdentifier()}:
 
@@ -45,5 +48,7 @@ abstract class Statement extends CodeElement {
                     return null
             }
         return null
+
+        System.setOut()
     }
 }
