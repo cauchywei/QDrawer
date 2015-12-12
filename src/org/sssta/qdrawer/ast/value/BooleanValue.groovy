@@ -7,8 +7,8 @@ import org.sssta.qdrawer.ast.type.Type
  */
 class BooleanValue extends Value {
 
-    static final Boolean TURE = new BooleanValue(true)
-    static final Boolean FALSE = new BooleanValue(false)
+    static final BooleanValue TURE = new BooleanValue(true)
+    static final BooleanValue FALSE = new BooleanValue(false)
 
 
     boolean value
