@@ -3,7 +3,7 @@ package org.sssta.qdrawer.statement.expression
  * Created by cauchywei on 15/11/30.
  */
 class InvokeExpression extends Expression {
-    Expression function
+    VariableExpression function
     List<Expression> arguments
 
     @Override

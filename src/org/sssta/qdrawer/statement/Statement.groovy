@@ -9,7 +9,6 @@ import org.sssta.qdrawer.statement.expression.Expression
  */
 abstract class Statement extends CodeElement {
     static Statement parse(Laxer laxer, List<CodeError> errors) {
-        def statement = null
 
             def token = laxer.peekToken()
             switch (token.getType()) {
@@ -24,7 +23,7 @@ abstract class Statement extends CodeElement {
                         return null
                     }
 
-                    statement =  new ExpressionStatement(expr)
+                    def statement =  new ExpressionStatement(expr)
 
                     if (laxer.peekToken()?.type != TokenType.COMMA) {
                         errors << new CodeError(col:laxer.col,row: laxer.row,message: 'Excepted ;')
@@ -37,6 +36,7 @@ abstract class Statement extends CodeElement {
                     return ForStatement.parse(laxer,errors)
                     break
                 case TokenType.FUNC:
+                    return FunctionDeclarationStatement.parse(laxer,errors)
                     break
                 case TokenType.SEMICO:
                 case TokenType.COMMENT:
@@ -44,6 +44,7 @@ abstract class Statement extends CodeElement {
                     return new EmptyStatement()
                     break
                 default:
+                    errors << new CodeError(col:laxer.col,row: laxer.row,message: 'Excepted a statement;')
                     return null
             }
         return null

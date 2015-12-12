@@ -16,6 +16,7 @@ class ImportStatement extends Statement{
         def statement = new ImportStatement()
         if (laxer.peekToken()?.type != TokenType.IMPORT) {
             errors << new CodeError(col: laxer.col, row: laxer.row, message: 'Excepted import declaration.')
+            return null
         } else {
             statement.keyToken = laxer.takeToken()
             if (laxer.peekToken()?.type == TokenType.IDENTIFIER){

@@ -113,7 +113,7 @@ abstract class Expression {
 
         if (next?.isIdentifier()) {
 
-            def var = new VariableExpression(identifier: next)
+            def var = new VariableExpression(next)
             if (laxer.peekToken()?.type != TokenType.OPEN_BRACKET) {
                 return var
             } else {

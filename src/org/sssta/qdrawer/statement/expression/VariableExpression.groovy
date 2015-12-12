@@ -8,6 +8,10 @@ import org.sssta.qdrawer.lexer.Token
 class VariableExpression extends Expression {
     Token identifier
 
+    VariableExpression(Token identifier) {
+        this.identifier = identifier
+    }
+
     @Override
     public String toString() {
        identifier.value;
