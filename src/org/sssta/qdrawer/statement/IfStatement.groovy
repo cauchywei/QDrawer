@@ -58,7 +58,7 @@ class IfStatement extends Statement {
                         return null
                     }
 
-                    statement.ifScopeStatement = elseScopeStatement
+                    statement.elseScopeStatement = elseScopeStatement
 
                 }
             }
