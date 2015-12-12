@@ -28,7 +28,7 @@ abstract class Expression {
                 token = laxer.takeToken()
             }
 
-            assignmentExpression.variable = new VariableExpression(identifier: token)
+            assignmentExpression.variable = new VariableExpression(token)
 
 
             if (laxer.peekToken()?.type == TokenType.IS || laxer.peekToken()?.type == TokenType.ASSIGMENT) {
@@ -72,7 +72,8 @@ abstract class Expression {
         if (token?.type == TokenType.PLUS || token?.type == TokenType.MINUS || token?.type == TokenType.NOT) {
             token = laxer.takeToken()
             UnaryExpression unaryExpression = new UnaryExpression()
-            unaryExpression.opt = UnaryOperator.valueOf(token.type.toString())
+
+            unaryExpression.opt = UnaryOperator.values().find({it.opt == token.value})
             def expr = parseFactor(laxer, errors)
             if (expr == null) {
 //                errors << new CodeError(row :laxer.row,col :laxer.col,message: "Excepted an illegal parseExpression after "+unaryExpression.opt.toString()+".")

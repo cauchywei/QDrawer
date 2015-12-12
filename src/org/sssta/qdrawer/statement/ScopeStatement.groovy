@@ -10,7 +10,7 @@ import org.sssta.qdrawer.lexer.TokenType
 class ScopeStatement extends Statement {
 
     List<Statement> statements = [];
-    boolean multilineWithScope;
+    boolean hasScopeMark;
 
     static ScopeStatement parse(Laxer laxer, List<CodeError> errors) {
         def scopeStatement = new ScopeStatement()
@@ -44,7 +44,7 @@ class ScopeStatement extends Statement {
             return null
         }
 
-        scopeStatement.multilineWithScope = multiLineWithScope
+        scopeStatement.hasScopeMark = multiLineWithScope
 
         return scopeStatement
     }

@@ -33,6 +33,7 @@ class FunctionDeclarationStatement extends Statement {
                     laxer.takeToken()
                     def arg = laxer.peekToken()
                     if (arg != null) {
+                        laxer.takeToken()
                         funcStatement.arguments << new VariableExpression(arg)
                         while (laxer.peekToken()?.type == TokenType.COMMA) {
                             laxer.takeToken()
@@ -53,7 +54,8 @@ class FunctionDeclarationStatement extends Statement {
                     laxer.takeToken()
 
                     def scopeStatement = ScopeStatement.parse(laxer, errors)
-                    if (scopeStatement == null) {
+                    if (scopeStatement == null || !scopeStatement.hasScopeMark) {
+                        errors << new CodeError(row :laxer.row,col :laxer.col,message: "Excepted scope after function declaration.")
                         return null
                     }
 

@@ -8,16 +8,15 @@ class StatementTest extends GroovyTestCase{
 
     @Test
     void testCorrectStatement() {
-        def code = '''
-                    module hello;
+        def code = '''module hello;
                     import stddrw;
-                    import stdio
-                    using java.util.Math;
+                    import stdio;
+                    using java.lang.Math;
 
-                    const PI = 3.1415926
+                    const PI = 3.1415926;
 
                     for t form 1 to 10 step 1 {
-                        draw(t,t)
+                        draw(t,t);
                     }
 
                     if(a == 2)
@@ -36,23 +35,28 @@ class StatementTest extends GroovyTestCase{
                     }
 
                     func sin(v){
-                        return java.utils.Math.sin(v);
+                        return java.lang.Math.sin(v);
                     }
 
 
                     '''
 
-        def reader = new InputStreamReader(new StringInputStream(code))
-        def parser = new Parser(reader)
+        def parser = new Parser(new StringInputStream(code))
 
         def module = parser.parse()
+
         assertEquals([],parser.errors)
-        assertEquals('hello',module.name)
+
+        assertEquals('hello',module.name.value)
+
         assertEquals(2,module.importStatements.size())
+
         assertEquals('stddrw',module.importStatements[0].name)
         assertEquals('stdio',module.importStatements[1].name)
 
-        reader.close()
+        assertEquals(1,module.usingStatements.size())
+        assertEquals('java.lang.Math',module.usingStatements[0].library.value)
+
     }
 
 }

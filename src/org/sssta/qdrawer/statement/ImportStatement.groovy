@@ -18,11 +18,12 @@ class ImportStatement extends Statement{
             errors << new CodeError(col: laxer.col, row: laxer.row, message: 'Excepted import declaration.')
             return null
         } else {
-            statement.keyToken = laxer.takeToken()
+            laxer.takeToken()
             if (laxer.peekToken()?.type == TokenType.IDENTIFIER){
                 statement.name = laxer.takeToken().value
             }else {
                 errors << new CodeError(col: laxer.col, row: laxer.row, message: 'Excepted import lib name.')
+                return null
             }
         }
 

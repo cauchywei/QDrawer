@@ -22,7 +22,6 @@ enum TokenType {
     FOR('for'),
     FROM('from'),
     TO('to'),
-    DRAW('draw'),
     STEP('step'),
 
     FUNC("func"),

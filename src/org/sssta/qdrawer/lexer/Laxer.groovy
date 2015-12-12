@@ -33,7 +33,6 @@ class Laxer {
                                               TokenType.FOR       .name(),
                                               TokenType.FROM      .name(),
                                               TokenType.TO        .name(),
-                                              TokenType.DRAW      .name(),
                                               TokenType.AND       .name(),
                                               TokenType.OR        .name(),
                                               TokenType.TRUE      .name(),

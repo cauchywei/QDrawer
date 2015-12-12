@@ -16,7 +16,9 @@ class UsingStatement extends Statement{
         def statement = new UsingStatement()
         if (laxer.peekToken()?.type != TokenType.USING) {
             errors << new CodeError(col: laxer.col, row: laxer.row, message: 'Excepted import declaration.')
+            return null
         } else {
+            laxer.takeToken()
             if (laxer.peekToken()?.type == TokenType.IDENTIFIER){
                 statement.library = laxer.takeToken()
             }else {

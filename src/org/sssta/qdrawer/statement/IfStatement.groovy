@@ -25,6 +25,8 @@ class IfStatement extends Statement {
                 return null
             } else {
 
+                laxer.takeToken()
+
                 def condition = Expression.parse(laxer, errors)
 
                 if (condition == null) {
