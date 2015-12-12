@@ -38,7 +38,9 @@ class Laxer {
                                               TokenType.OR        .name(),
                                               TokenType.TRUE      .name(),
                                               TokenType.FALSE     .name(),
-                                              TokenType.STEP      .name(),]
+                                              TokenType.STEP      .name(),
+                                              TokenType.IF        .name(),
+                                              TokenType.ELSE      .name(),]
 
     List<Character> charBuffer = []
     List<Token> tokenBuffer = []

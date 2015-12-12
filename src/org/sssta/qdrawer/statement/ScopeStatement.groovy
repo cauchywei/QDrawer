@@ -10,14 +10,15 @@ import org.sssta.qdrawer.lexer.TokenType
 class ScopeStatement extends Statement {
 
     List<Statement> statements = [];
+    boolean multilineWithScope;
 
     static ScopeStatement parse(Laxer laxer, List<CodeError> errors) {
         def scopeStatement = new ScopeStatement()
-        def multiLine = false
+        def multiLineWithScope = false
 
 
         if (laxer.peekToken()?.type == TokenType.OPEN_SCOPE) {
-            multiLine = true
+            multiLineWithScope = true
             laxer.takeToken()
         }
 
@@ -27,7 +28,7 @@ class ScopeStatement extends Statement {
             scopeStatement.statements << subStatement
         }
 
-        if (multiLine) {
+        if (multiLineWithScope) {
 
             if (laxer.peekToken()?.type == TokenType.CLOSE_SCOPE) {
                 laxer.takeToken()
@@ -38,10 +39,12 @@ class ScopeStatement extends Statement {
 
         }
 
-        if (!multiLine && scopeStatement.statements.isEmpty()) {
+        if (!multiLineWithScope && scopeStatement.statements.isEmpty()) {
             errors << new CodeError(col: laxer.col, row: laxer.row, message: 'Excepted module declaration.')
             return null
         }
+
+        scopeStatement.multilineWithScope = multiLineWithScope
 
         return scopeStatement
     }

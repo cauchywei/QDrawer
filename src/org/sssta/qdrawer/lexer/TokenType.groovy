@@ -32,6 +32,9 @@ enum TokenType {
     TRUE('true'),
     FALSE('false'),
 
+    IF('if'),
+    ELSE('else'),
+
     IDENTIFIER('identifier'),
 
 

@@ -117,11 +117,11 @@ abstract class Expression {
             if (laxer.peekToken()?.type != TokenType.OPEN_BRACKET) {
                 return var
             } else {
+                laxer.takeToken()
 
                 def func = new InvokeExpression(function: var)
                 def args = []
                 func.arguments = args
-                laxer.takeToken()
                 def arg = parseExpression(laxer, errors)
                 if (arg != null) {
                     args << arg
