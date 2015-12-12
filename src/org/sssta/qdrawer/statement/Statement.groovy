@@ -10,6 +10,8 @@ import org.sssta.qdrawer.statement.expression.Expression
 abstract class Statement extends CodeElement {
     static Statement parse(Laxer laxer, List<CodeError> errors) {
 
+        while (1){
+
             def token = laxer.peekToken()
             switch (token.getType()) {
                 case TokenType.OPEN_SCOPE:
@@ -39,15 +41,19 @@ abstract class Statement extends CodeElement {
                     return FunctionDeclarationStatement.parse(laxer,errors)
                     break
                 case TokenType.SEMICO:
+                    return new EmptyStatement()
                 case TokenType.COMMENT:
                     laxer.takeToken()
-                    return new EmptyStatement()
+                    continue
                     break
+                case TokenType.RETURN:
+                    return ReturnStatement.parse(laxer,errors)
                 default:
                     errors << new CodeError(col:laxer.col,row: laxer.row,message: 'Excepted a statement;')
                     return null
             }
+            break
+        }
         return null
-
     }
 }

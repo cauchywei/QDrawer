@@ -26,6 +26,8 @@ enum TokenType {
     STEP('step'),
 
     FUNC("func"),
+    RETURN("return"),
+
 
     NUMBERIC('numeric'),
     STRING('string'),

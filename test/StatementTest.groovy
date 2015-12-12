@@ -8,9 +8,39 @@ class StatementTest extends GroovyTestCase{
 
     @Test
     void testCorrectStatement() {
-        def code = '''module hello;
+        def code = '''
+                    module hello;
                     import stddrw;
-                    import stdio;'''
+                    import stdio
+                    using java.util.Math;
+
+                    const PI = 3.1415926
+
+                    for t form 1 to 10 step 1 {
+                        draw(t,t)
+                    }
+
+                    if(a == 2)
+                        draw(a,a);
+
+                    if(a == 2){
+                        draw(a,a);
+                        b = 4*3;
+                    }
+
+                    if(a == 2){
+                        draw(a,a);
+                        b = 4*3;
+                    }else{
+                        b = -1;
+                    }
+
+                    func sin(v){
+                        return java.utils.Math.sin(v);
+                    }
+
+
+                    '''
 
         def reader = new InputStreamReader(new StringInputStream(code))
         def parser = new Parser(reader)

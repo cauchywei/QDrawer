@@ -22,7 +22,7 @@ class Laxer {
 
     public static final def KEY_IDENTIFIERS =[TokenType.MODULE    .name(),
                                               TokenType.IMPORT    .name(),
-                                              TokenType.USING       .name(),
+                                              TokenType.USING     .name(),
                                               TokenType.FUNC      .name(),
                                               TokenType.CONST     .name(),
                                               TokenType.IS        .name(),
@@ -40,7 +40,9 @@ class Laxer {
                                               TokenType.FALSE     .name(),
                                               TokenType.STEP      .name(),
                                               TokenType.IF        .name(),
+                                              TokenType.RETURN    .name(),
                                               TokenType.ELSE      .name(),]
+
 
     List<Character> charBuffer = []
     List<Token> tokenBuffer = []
