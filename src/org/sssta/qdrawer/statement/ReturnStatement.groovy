@@ -15,7 +15,7 @@ class ReturnStatement extends Statement{
         } else {
             laxer.takeToken()
             def ret = Statement.parse(laxer, errors)
-            if (ret == null || !(ret instanceof ExpressionStatement) || !(ret instanceof EmptyStatement)) {
+            if (ret == null || !(ret instanceof ExpressionStatement) && !(ret instanceof EmptyStatement)) {
                 errors << new CodeError(col: laxer.col, row: laxer.row, message: 'Excepted return expression .')
                 return null
             }

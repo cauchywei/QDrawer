@@ -14,11 +14,11 @@ class ScopeStatement extends Statement {
 
     static ScopeStatement parse(Laxer laxer, List<CodeError> errors) {
         def scopeStatement = new ScopeStatement()
-        def multiLineWithScope = false
+        def hasScopeMark = false
 
 
         if (laxer.peekToken()?.type == TokenType.OPEN_SCOPE) {
-            multiLineWithScope = true
+            hasScopeMark = true
             laxer.takeToken()
         }
 
@@ -26,9 +26,12 @@ class ScopeStatement extends Statement {
 
         while (subStatement = Statement.parse(laxer, [])) {
             scopeStatement.statements << subStatement
+            if (!hasScopeMark) {
+                break
+            }
         }
 
-        if (multiLineWithScope) {
+        if (hasScopeMark) {
 
             if (laxer.peekToken()?.type == TokenType.CLOSE_SCOPE) {
                 laxer.takeToken()
@@ -39,12 +42,12 @@ class ScopeStatement extends Statement {
 
         }
 
-        if (!multiLineWithScope && scopeStatement.statements.isEmpty()) {
+        if (!hasScopeMark && scopeStatement.statements.isEmpty()) {
             errors << new CodeError(col: laxer.col, row: laxer.row, message: 'Excepted module declaration.')
             return null
         }
 
-        scopeStatement.hasScopeMark = multiLineWithScope
+        scopeStatement.hasScopeMark = hasScopeMark
 
         return scopeStatement
     }
