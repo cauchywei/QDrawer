@@ -13,6 +13,8 @@ class Type extends BaseProperty {
     static final Type NUMERIC = new NumericType()
     static final Type POINT = new PointType()
     static final Type VOID = new VoidType()
+    static final Type FUNCTION = new FunctionType()
+
 
 
     String name
