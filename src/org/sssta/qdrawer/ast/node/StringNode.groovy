@@ -19,6 +19,6 @@ class StringNode extends Node{
 
     @Override
     Type checkType(Scope scope) {
-        return Type.NUMERIC
+        return Type.STRING
     }
 }

@@ -1,5 +1,4 @@
 package org.sssta.qdrawer.ast.node
-
 import org.sssta.qdrawer.Console
 import org.sssta.qdrawer.ast.Scope
 import org.sssta.qdrawer.ast.type.BooleanType
@@ -7,7 +6,7 @@ import org.sssta.qdrawer.ast.type.Type
 import org.sssta.qdrawer.ast.type.UnionType
 import org.sssta.qdrawer.ast.value.BooleanValue
 import org.sssta.qdrawer.ast.value.Value
-import org.sssta.qdrawer.lexer.CodeError
+import org.sssta.qdrawer.exception.IllegalTypeError
 /**
  * Created by cauchywei on 15/12/12.
  */
@@ -28,7 +27,7 @@ class IfNode extends Node {
                 return elseNode.eval(scope)
             }
         } else {
-            Console.errors << new CodeError(this,'illegal type: require boolean but found ' + condition.type)
+            Console.addError(new IllegalTypeError(this,'illegal type: require boolean but found ' + condition.type))
         }
         return null
     }
@@ -39,7 +38,7 @@ class IfNode extends Node {
         if (conditionType instanceof BooleanType) {
                return UnionType.union(thanNode.checkType(scope),elseNode.checkType(scope))
         } else {
-            Console.errors << new CodeError(this,'illegal type. require boolean but found ' + condition.type)
+            Console.addError(new IllegalTypeError(this,'illegal type. require boolean but found ' + condition))
         }
         return null
     }
