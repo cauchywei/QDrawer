@@ -1,14 +1,13 @@
 package org.sssta.qdrawer.ast
-
+import org.sssta.qdrawer.ast.type.Type
 import org.sssta.qdrawer.ast.value.Value
-import org.sssta.qdrawer.lexer.Token
 /**
  * Created by cauchywei on 15/9/14.
  */
 class Scope{
 
     Scope parent
-    HashMap<Token,ElementInfo> table
+    HashMap<String,SymbolInfo> table
 
     Scope() {
     }
@@ -18,7 +17,7 @@ class Scope{
     }
 
     public void putAll(Scope other) {
-        for (Token name : other.table.keySet()) {
+        for (String name : other.table.keySet()) {
             table.put(name,other.table.get(name));
         }
     }
@@ -35,7 +34,33 @@ class Scope{
         }
     }
 
-    public Value getValue(Token name) {
+    public void putValue(String name, Value value) {
+        def elm
+        if (!exist(name)) {
+            elm = new SymbolInfo()
+        } else {
+            elm = getSymbol(name)
+        }
+
+        elm.setValue(value)
+
+        table.put(name,elm)
+    }
+
+    public void putType(String name, Type type) {
+        def elm
+        if (!exist(name)) {
+            elm = new SymbolInfo()
+        } else {
+            elm = getSymbol(name)
+        }
+
+        elm.setType(type)
+
+        table.put(name,elm)
+    }
+
+    public Value getValue(String name) {
         def localVal = getValueLocal(name)
         if (localVal == null) {
             return parent.getValue(name)
@@ -43,7 +68,7 @@ class Scope{
         return localVal
     }
 
-    public Value getValueLocal(Token name) {
+    public Value getValueLocal(String name) {
         def var = table.get(name)
         if (var == null) {
             return null
@@ -51,15 +76,15 @@ class Scope{
         return var.getValue()
     }
 
-    public Value getType(Token name) {
-        def localType = getType()Local(name)
+    public Type getType(String name) {
+        def localType = getTypeLocal(name)
         if (localType == null) {
             return parent.getType(name)
         }
         return localType
     }
 
-    public Value getTypeLocal(Token name) {
+    public Type getTypeLocal(String name) {
         def var = table.get(name)
         if (var == null) {
             return null
@@ -67,15 +92,15 @@ class Scope{
         return var.getType()
     }
 
-    public ElementInfo getElement(Token name) {
+    public SymbolInfo getSymbol(String name) {
         def local = table.get(name)
         if (local == null) {
-            return parent.getElement(name)
+            return parent.getSymbol(name)
         }
         return local
     }
 
-    public ElementInfo getElementLocal(Token name) {
+    public SymbolInfo getElementLocal(String name) {
         table.get(name)
     }
 }

@@ -14,6 +14,7 @@ class Type extends BaseProperty {
     static final Type POINT = new PointType()
     static final Type VOID = new VoidType()
     static final Type FUNCTION = new FunctionType()
+    static final Type UNDEFINED = new UndefinedType()
 
 
 
