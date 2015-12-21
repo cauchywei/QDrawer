@@ -14,7 +14,6 @@ class Scope {
 
     public static final int DEFAULT_POINT_RADIUS = 2
 
-    static Paint paint
     static Graphics2D graphics2D
     static int pointRadius = DEFAULT_POINT_RADIUS
 
@@ -134,5 +133,16 @@ class Scope {
         }
 
         return imports
+    }
+
+    public Scope copy() {
+        def copy = new Scope()
+        copy.parent = parent
+        copy.table = new HashMap<>()
+        copy.table.putAll(table)
+        copy.isFunctionScope = isFunctionScope
+        copy.returnFlag = returnFlag
+        copy.returnValue = returnValue
+        return copy
     }
 }

@@ -137,7 +137,7 @@ class StatementTest extends GroovyTestCase{
 
 
 //        func sin(v){
-//            return java.lang.Math.sin(v);
+//            return sin(v);
 //        }
         statement = module.statements[6]
         assertTrue(statement instanceof FunctionDeclarationStatement)

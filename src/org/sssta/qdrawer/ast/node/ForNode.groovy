@@ -16,7 +16,7 @@ class ForNode extends Node {
     ExpressionNode from
     ExpressionNode to
     ExpressionNode step
-    List<Node> body
+    ScopeNode body
 
     @Override
     Value eval(Scope envr) {
@@ -46,12 +46,9 @@ class ForNode extends Node {
         def lastVal = new VoidValue()
         OUTER:for (double i = fromVal.value; i < toVal.value; i+= stepVal.value) {
             scope.putValue(loopVar,new NumericValue(i))
-            for (int j = 0; j < body.size(); j++) {
-                lastVal = body[j].eval(scope)
-                if (envr.returnFlag) {
-                    //TODO to check that illegal return statement in non-function scope
-                    break OUTER
-                }
+            lastVal = body.eval(scope)
+            if (scope.returnFlag) {
+                return scope.returnValue
             }
         }
 

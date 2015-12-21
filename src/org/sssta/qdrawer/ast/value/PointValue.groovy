@@ -1,6 +1,6 @@
 package org.sssta.qdrawer.ast.value
 
-import org.sssta.qdrawer.Point
+import org.sssta.qdrawer.ast.Point
 import org.sssta.qdrawer.ast.type.Type
 
 /**

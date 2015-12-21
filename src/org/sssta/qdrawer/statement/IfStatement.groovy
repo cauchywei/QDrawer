@@ -72,6 +72,6 @@ class IfStatement extends Statement {
 
     @Override
     IfNode createAstNode() {
-        return new IfNode(condition: condition.createAstNode(), thenNode:thenScopeStatement.createAstNode(),elseNode: elseScopeStatement.createAstNode() )
+        return new IfNode(condition: condition.createAstNode(), thenNode:thenScopeStatement.createAstNode(),elseNode: elseScopeStatement?.createAstNode() )
     }
 }
