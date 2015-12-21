@@ -7,7 +7,7 @@ import org.sssta.qdrawer.statement.UsingStatement
 /**
  * Created by cauchywei on 15/9/9.
  */
-class Module extends Statement {
+class Module  {
 
     Token name
     List<ImportStatement> importStatements = []

@@ -12,7 +12,7 @@ import org.sssta.qdrawer.exception.IllegalOperateError
 /**
  * Created by cauchywei on 15/12/15.
  */
-class FunctionCallNode extends Node {
+class FunctionCallNode extends ExpressionNode {
 
     VariableNode funcName
     List<Node> args

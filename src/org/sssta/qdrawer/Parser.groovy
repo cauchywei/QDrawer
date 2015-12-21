@@ -39,7 +39,6 @@ class Parser {
         def statement
         while (laxer.hasNext() && (statement = Statement.parse(laxer,errors))) {
             module.statements << statement
-
         }
 
         return module

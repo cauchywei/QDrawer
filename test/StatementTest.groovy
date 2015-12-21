@@ -43,7 +43,7 @@ class StatementTest extends GroovyTestCase{
                     }
 
                     func sin(v){
-                        return java.lang.Math.sin(v);
+                        return sin(v);
                     }
 
                     sin(2*PI);
