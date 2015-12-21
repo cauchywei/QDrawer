@@ -164,7 +164,6 @@ class FunctionCallNode extends ExpressionNode {
 
             if (clazz != null && methName != null) {
 
-                methodNotFound = false
 
                 def meth = clazz.getMethods().find({ it.name == methName })
 
@@ -179,13 +178,14 @@ class FunctionCallNode extends ExpressionNode {
                 }
 
                 def retType = meth.returnType
-                if (retType == Void.TYPE) {
+
+                if (retType.isAssignableFrom(Void.TYPE)) {
                     return Type.VOID
-                } else if (retType == Number.class) {
+                } else if (retType.class.isAssignableFrom(Number.class) || retType == double.class || retType == float.class || retType == int.class) {
                     return Type.NUMERIC
-                } else if (retType == Boolean.class) {
+                } else if ( retType.isAssignableFrom(Boolean.class)) {
                     return Type.BOOLEAN
-                } else if (retType == String.class) {
+                } else if (retType.isAssignableFrom(String.class)) {
                     return Type.STRING
                 } else {
                     Console.addError(new IllegalOperateError(this, funcName.name.value + '()\'s return type is not supported now!'))
@@ -203,7 +203,7 @@ class FunctionCallNode extends ExpressionNode {
             }
         }
 
-        Console.addError(new CodeError(this, funcName.name.value + 'is not a function, it not defined'))
+        Console.addError(new CodeError(this, funcName.name.value + 'is not a function or it not defined'))
         return null
     }
 }

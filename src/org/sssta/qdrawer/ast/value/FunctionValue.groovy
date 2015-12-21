@@ -30,6 +30,7 @@ class FunctionValue extends Value {
     Value eval(List<Node> args) {
         //put our params to our local scope
         def scope = new Scope(parentScope)
+        scope.isFunctionScope = true
         args.eachWithIndex { Node arg, int i -> scope.putSymbol(params[i].name.value,new SymbolInfo(type: arg.checkType(scope),value: arg.eval(scope))) }
 
         def ret = body.eval(scope)

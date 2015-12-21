@@ -13,7 +13,6 @@ class Parser {
 
     Laxer laxer
     InputStream inputStream
-    List<CodeError> errors = []
 
     Parser(InputStream inputStream) {
         this.inputStream = inputStream
@@ -22,6 +21,7 @@ class Parser {
 
     Module parse(){
 
+        def errors = Console.errors
         def module = new Module()
         eatComment()
         module.name = ModuleStatement.parse(laxer,errors).name

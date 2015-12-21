@@ -23,7 +23,7 @@ class FunctionNode extends Node {
         }
 
         def value = new FunctionValue(name: funcName, params: args, body: body, parentScope: envr)
-        def funcSymbol = new SymbolInfo(value: value,type: Type.FUNCTION)
+        def funcSymbol = new SymbolInfo(Type.FUNCTION,value)
         envr.putSymbol(funcName.name.value,funcSymbol)
 
         return value

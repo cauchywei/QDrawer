@@ -43,12 +43,12 @@ class ModuleTest extends GroovyTestCase {
                     }
 
                     func max(a,b){
-                        if (a>b) a else b
+                        if (a>b) a; else b;
                     }
 
                     c = sin(2*PI);
                     d = add(1,2);
-                    e = max(99,100)
+                    e = max(99,100);
                     '''
 
         def parser = new Parser(new StringInputStream(code))
@@ -60,9 +60,29 @@ class ModuleTest extends GroovyTestCase {
         def errors = Console.errors
         def scope = ast.global
 
-        def piValue = scope.getValue("PI")
-        assertTrue(piValue instanceof NumericValue)
+        def var = scope.getValue("PI")
+        assertTrue(var instanceof NumericValue)
         assertEquals(scope.getValue("PI").asType(NumericValue).value,3.1415926)
+
+        var = scope.getValue("a")
+        assertTrue(var instanceof NumericValue)
+        assertEquals(var.asType(NumericValue).value,2)
+
+        var = scope.getValue("b")
+        assertTrue(var instanceof NumericValue)
+        assertEquals(var.asType(NumericValue).value,12)
+
+        var = scope.getValue("c")
+        assertTrue(var instanceof NumericValue)
+        assertEquals(var.asType(NumericValue).value,Math.sin(2*3.1415926))
+
+        var = scope.getValue("d")
+        assertTrue(var instanceof NumericValue)
+        assertEquals(var.asType(NumericValue).value,3)
+
+        var = scope.getValue("e")
+        assertTrue(var instanceof NumericValue)
+        assertEquals(var.asType(NumericValue).value,100)
 
     }
 }

@@ -18,13 +18,12 @@ class Module  {
 
     Ast build() {
         def ast = new Ast()
-
-        importStatements.each {
-            def impLib = it.getName().value
+        usingStatements.each {
+            def usingLib = it.library.value
             try {
-                ast.global.usings << Class.forName(impLib)
+                ast.global.usings << Class.forName(usingLib)
             } catch (e) {
-                Console.errors << new CodeError(it.name,"Can't found the Java Class " + impLib)
+                Console.errors << new CodeError(it.library,"Can't found the Java Class " + impLib)
             }
         }
 
