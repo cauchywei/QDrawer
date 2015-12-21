@@ -40,7 +40,11 @@ class FunctionValue extends Value {
             }
         }
 
-        return lastValue
+        if (scope.returnFlag) {
+            return scope.returnValue
+        } else {
+            return lastValue
+        }
     }
 
     Type checkType(List<Node> args) {

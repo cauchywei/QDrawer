@@ -22,6 +22,8 @@ class Scope {
     HashMap<String, SymbolInfo> table
     List<Class> imports = [];
 
+
+    boolean isFunctionScope = false
     boolean returnFlag = false
     Value returnValue = new VoidValue()
 
@@ -30,6 +32,7 @@ class Scope {
 
     Scope(Scope parent) {
         this.parent = parent
+        this.isFunctionScope = parent.isFunctionScope
     }
 
     public void putAll(Scope other) {

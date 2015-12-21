@@ -8,7 +8,7 @@ import org.sssta.qdrawer.ast.value.Value
 /**
  * Created by cauchywei on 15/12/13.
  */
-class NumericNode extends Node{
+class NumericNode extends ExpressionNode{
 
     double number
 

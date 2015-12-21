@@ -31,6 +31,7 @@ class GTENode extends PrimitiveNode {
             return null
         }
 
+
         def rightV = right.eval(scope)
 
         if (!(rightV instanceof NumericValue)) {
