@@ -1,13 +1,26 @@
 package org.sssta.qdrawer.ast
 import org.sssta.qdrawer.ast.type.Type
 import org.sssta.qdrawer.ast.value.Value
+
+import java.awt.Graphics2D
+import java.awt.Paint
+
 /**
  * Created by cauchywei on 15/9/14.
  */
 class Scope{
 
+    public static final int DEFAULT_POINT_RADIUS = 2
+
+    static Paint paint
+    static Graphics2D graphics2D
+    static int pointRadius = DEFAULT_POINT_RADIUS
+
     Scope parent
     HashMap<String,SymbolInfo> table
+    List<Class> imports = [];
+
+
 
     Scope() {
     }
@@ -92,6 +105,10 @@ class Scope{
         return var.getType()
     }
 
+    public void putSymbol(String name, SymbolInfo symbol) {
+        table.put(name,symbol)
+    }
+
     public SymbolInfo getSymbol(String name) {
         def local = table.get(name)
         if (local == null) {
@@ -102,5 +119,13 @@ class Scope{
 
     public SymbolInfo getElementLocal(String name) {
         table.get(name)
+    }
+
+    public List<Class> getImports() {
+        if (parent != null) {
+            return parent.getImports()
+        }
+
+        return imports
     }
 }

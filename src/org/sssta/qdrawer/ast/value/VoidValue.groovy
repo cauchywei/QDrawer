@@ -10,4 +10,9 @@ class VoidValue extends Value {
     Type getType() {
         Type.VOID
     }
+
+    @Override
+    Object getJavaValue() {
+        return null
+    }
 }

@@ -5,7 +5,7 @@ import org.sssta.qdrawer.ast.type.Type
 /**
  * Created by cauchywei on 15/12/13.
  */
-class StringValue extends Value {
+class StringValue extends Value<String> {
 
     String value
 
@@ -18,6 +18,10 @@ class StringValue extends Value {
         Type.STRING
     }
 
+    @Override
+    String getJavaValue() {
+        return value
+    }
 
     @Override
     public String toString() {

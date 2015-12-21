@@ -2,27 +2,23 @@ package org.sssta.qdrawer.ast.node
 
 import org.sssta.qdrawer.Console
 import org.sssta.qdrawer.ast.Scope
-import org.sssta.qdrawer.ast.SymbolInfo
 import org.sssta.qdrawer.ast.type.Type
 import org.sssta.qdrawer.ast.value.Value
+import org.sssta.qdrawer.ast.value.VoidValue
 import org.sssta.qdrawer.exception.IllegalOperateError
 
 /**
- * Created by cauchywei on 15/12/13.
+ * Created by cauchywei on 15/12/15.
  */
-class AssignmentNode extends Node {
-
+class ConstDeclarationNode extends Node {
     Variable variable
     Node value
 
     @Override
     Value eval(Scope scope) {
 
-        def symbol = scope.getSymbol(variable.name.value)
-        if (symbol == null  ) {
-            scope.putSymbol(variable.name.value,new SymbolInfo())
-        }else if (symbol.isConst) {
-            Console.addError(new IllegalOperateError(this,variable.name.value + ' is const, it can\'t be modified'))
+        if (scope.exist(variable.name.value)) {
+            Console.addError(new IllegalOperateError(this,variable.name.value + ' is const, it already defined'))
             return variable.eval(scope)
         }
 
@@ -31,19 +27,21 @@ class AssignmentNode extends Node {
         if (valueType == null) {
             return null
         }
-
-//        if (variable.checkType(scope) == Type.UNDEFINED) {
-            scope.putType(variable.name.value, valueType)
-//        }
+        scope.putType(variable.name.value, valueType)
 
         def val = value.eval(scope)
         scope.putValue(variable.name.value, val)
 
-        return val
+        return new VoidValue()
     }
 
     @Override
     Type checkType(Scope scope) {
-        return value.checkType(scope)
+
+        if (scope.exist(variable.name.value)) {
+            Console.addError(new IllegalOperateError(this,variable.name.value + ' is const, it already defined'))
+            return null
+        }
+        return Type.VOID
     }
 }
