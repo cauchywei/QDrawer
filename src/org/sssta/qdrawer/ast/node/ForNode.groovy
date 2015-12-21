@@ -12,10 +12,10 @@ import org.sssta.qdrawer.exception.IllegalTypeError
  */
 class ForNode extends Node {
 
-    Variable var
-    Node from
-    Node to
-    Node step
+    VariableNode var
+    ExpressionNode from
+    ExpressionNode to
+    ExpressionNode step
     List<Node> body
 
     @Override
@@ -33,7 +33,7 @@ class ForNode extends Node {
             return null
         }
 
-        def stepVal = to.eval(envr)
+        def stepVal = step.eval(envr)
         if (!(stepVal instanceof NumericValue)) {
             Console.addError(new IllegalTypeError(step,'illegal type:require Numeric but found ' + stepVal.type))
             return null

@@ -1,5 +1,7 @@
 package org.sssta.qdrawer.statement
 
+import org.sssta.qdrawer.ast.node.Node
+import org.sssta.qdrawer.ast.node.ScopeNode
 import org.sssta.qdrawer.lexer.CodeError
 import org.sssta.qdrawer.lexer.Laxer
 import org.sssta.qdrawer.lexer.TokenType
@@ -50,5 +52,12 @@ class ScopeStatement extends Statement {
         scopeStatement.hasScopeMark = hasScopeMark
 
         return scopeStatement
+    }
+
+    @Override
+    ScopeNode createAstNode() {
+        List<Node> body = []
+        statements.each { body << it.createAstNode()}
+        return new ScopeNode(body)
     }
 }

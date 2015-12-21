@@ -7,9 +7,13 @@ import org.sssta.qdrawer.lexer.Token
 /**
  * Created by cauchywei on 15/12/14.
  */
-class Variable extends Node {
+class VariableNode extends ExpressionNode {
 
     Token name
+
+    VariableNode(Token name) {
+        this.name = name
+    }
 
     @Override
     Value eval(Scope scope) {

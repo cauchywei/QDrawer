@@ -2,27 +2,27 @@ package org.sssta.qdrawer.ast.node
 
 import org.sssta.qdrawer.ast.Scope
 import org.sssta.qdrawer.ast.type.Type
-import org.sssta.qdrawer.ast.value.NumericValue
+import org.sssta.qdrawer.ast.value.BooleanValue
 import org.sssta.qdrawer.ast.value.Value
 
 /**
  * Created by cauchywei on 15/12/13.
  */
-class NumericNode extends ExpressionNode{
+class BooleanNode extends ExpressionNode{
 
-    double number
+    boolean bool
 
-    NumericNode(double number) {
-        this.number = number
+    BooleanNode(boolean bool) {
+        this.bool = bool
     }
 
     @Override
     Value eval(Scope scope) {
-        return new NumericValue(number)
+        return new BooleanValue(bool)
     }
 
     @Override
     Type checkType(Scope scope) {
-        return Type.NUMERIC
+        return Type.BOOLEAN
     }
 }

@@ -1,8 +1,10 @@
 package org.sssta.qdrawer.statement
+import org.sssta.qdrawer.ast.node.FunctionNode
+import org.sssta.qdrawer.ast.node.Node
+import org.sssta.qdrawer.ast.node.VariableNode
 import org.sssta.qdrawer.lexer.CodeError
 import org.sssta.qdrawer.lexer.Laxer
 import org.sssta.qdrawer.lexer.TokenType
-import org.sssta.qdrawer.statement.expression.Expression
 import org.sssta.qdrawer.statement.expression.VariableExpression
 /**
  * Created by cauchywei on 15/11/30.
@@ -10,7 +12,7 @@ import org.sssta.qdrawer.statement.expression.VariableExpression
 class FunctionDeclarationStatement extends Statement {
 
     VariableExpression functionName
-    List<Expression> arguments = []
+    List<VariableExpression> arguments = []
     ScopeStatement scopeStatement;
 
     static FunctionDeclarationStatement parse(Laxer laxer, List<CodeError> errors) {
@@ -69,5 +71,12 @@ class FunctionDeclarationStatement extends Statement {
         }
 
         return funcStatement
+    }
+
+    @Override
+    Node createAstNode() {
+        List<VariableNode> args = []
+        arguments.each { args << new VariableNode(it.identifier)}
+        return new FunctionNode(funcName:functionName.createAstNode(),args:args,scopeNode: scopeStatement.createAstNode() )
     }
 }

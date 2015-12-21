@@ -16,6 +16,12 @@ class MinusNode extends PrimitiveNode {
     Node left
     Node right
 
+    MinusNode( Node left, Node right) {
+        this()
+        this.left = left
+        this.right = right
+    }
+
     MinusNode() {
         super('-', 2)
     }

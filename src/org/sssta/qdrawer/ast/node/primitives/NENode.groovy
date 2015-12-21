@@ -12,13 +12,13 @@ import org.sssta.qdrawer.exception.IllegalTypeError
 /**
  * Created by cauchywei on 15/12/13.
  */
-class EqNode extends PrimitiveNode {
+class NENode extends PrimitiveNode {
 
     Node left
     Node right
 
-    EqNode() {
-        super('==', 2)
+    NENode() {
+        super('!=', 2)
     }
 
     @Override
@@ -28,9 +28,9 @@ class EqNode extends PrimitiveNode {
         def rightV = right.eval(scope)
 
         if (leftV instanceof NumericValue && rightV instanceof NumericValue) {
-            return new BooleanValue(Double.compare(leftV.value,rightV.value) == 0)
+            return new BooleanValue(Double.compare(leftV.asType(NumericValue).value,rightV.asType(NumericValue).value) != 0)
         }else if (leftV instanceof BooleanValue && rightV instanceof BooleanValue) {
-            return new BooleanValue(leftV.value == rightV.value)
+            return new BooleanValue(leftV.asType(BooleanValue).value != rightV.asType(BooleanValue).value)
         } else {
             Console.addError(new IllegalTypeError(this, 'unsupported comparing between ' + leftV.type + ' and '+ rightV.type + 'two types'))
             return null

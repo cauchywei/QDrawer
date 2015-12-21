@@ -14,7 +14,7 @@ import org.sssta.qdrawer.exception.IllegalOperateError
  */
 class FunctionCallNode extends Node {
 
-    Variable funcName
+    VariableNode funcName
     List<Node> args
 
     @Override

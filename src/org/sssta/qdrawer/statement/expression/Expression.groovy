@@ -1,4 +1,5 @@
 package org.sssta.qdrawer.statement.expression
+import org.sssta.qdrawer.ast.node.ExpressionNode
 import org.sssta.qdrawer.lexer.CodeError
 import org.sssta.qdrawer.lexer.Laxer
 import org.sssta.qdrawer.lexer.TokenType
@@ -6,6 +7,8 @@ import org.sssta.qdrawer.lexer.TokenType
  * Created by cauchywei on 15/9/14.
  */
 abstract class Expression {
+
+    public abstract ExpressionNode createAstNode()
 
 
     static Expression parse(Laxer laxer, List<CodeError> errors) {

@@ -100,8 +100,8 @@ class StatementTest extends GroovyTestCase{
         statement = module.statements[2]
         assertTrue(statement instanceof ForStatement)
         expr = ((ForStatement) statement)
-        assertEquals('1',expr.start.toString())
-        assertEquals('10',expr.end.toString())
+        assertEquals('1',expr.from.toString())
+        assertEquals('10',expr.to.toString())
         assertEquals('1',expr.step.toString())
         assertEquals(1,expr.scopeStatement.statements.size())
 
@@ -109,27 +109,27 @@ class StatementTest extends GroovyTestCase{
         assertTrue(statement instanceof IfStatement)
         expr = ((IfStatement) statement)
         assertEquals('(== a 2)',expr.condition.toString())
-        assertNotNull(expr.ifScopeStatement)
-        assertEquals(1,expr.ifScopeStatement.statements.size())
-        assertFalse(expr.ifScopeStatement.hasScopeMark)
+        assertNotNull(expr.thenScopeStatement)
+        assertEquals(1,expr.thenScopeStatement.statements.size())
+        assertFalse(expr.thenScopeStatement.hasScopeMark)
         assertNull(expr.elseScopeStatement)
 
         statement = module.statements[4]
         assertTrue(statement instanceof IfStatement)
         expr = ((IfStatement) statement)
         assertEquals('(== a 2)',expr.condition.toString())
-        assertNotNull(expr.ifScopeStatement)
-        assertEquals(2,expr.ifScopeStatement.statements.size())
-        assertTrue(expr.ifScopeStatement.hasScopeMark)
+        assertNotNull(expr.thenScopeStatement)
+        assertEquals(2,expr.thenScopeStatement.statements.size())
+        assertTrue(expr.thenScopeStatement.hasScopeMark)
         assertNull(expr.elseScopeStatement)
 
         statement = module.statements[5]
         assertTrue(statement instanceof IfStatement)
         expr = ((IfStatement) statement)
         assertEquals('(== a 2)',expr.condition.toString())
-        assertNotNull(expr.ifScopeStatement)
-        assertEquals(2,expr.ifScopeStatement.statements.size())
-        assertTrue(expr.ifScopeStatement.hasScopeMark)
+        assertNotNull(expr.thenScopeStatement)
+        assertEquals(2,expr.thenScopeStatement.statements.size())
+        assertTrue(expr.thenScopeStatement.hasScopeMark)
 
         assertNotNull(expr.elseScopeStatement)
         assertEquals(1,expr.elseScopeStatement.statements.size())

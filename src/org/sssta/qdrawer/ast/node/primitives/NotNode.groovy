@@ -14,6 +14,11 @@ class NotNode extends PrimitiveNode {
 
     Node node
 
+    NotNode(Node node) {
+        this()
+        this.node = node
+    }
+
     NotNode() {
         super('!', 1)
     }

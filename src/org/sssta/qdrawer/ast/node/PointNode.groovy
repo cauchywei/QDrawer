@@ -9,9 +9,9 @@ import org.sssta.qdrawer.exception.IllegalTypeError
 /**
  * Created by cauchywei on 15/12/13.
  */
-class PointNode extends Node{
+class PointNode extends ExpressionNode{
 
-    Node x,y
+    ExpressionNode x,y
 
     @Override
     Value eval(Scope scope) {

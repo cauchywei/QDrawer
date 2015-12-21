@@ -1,4 +1,5 @@
 package org.sssta.qdrawer.statement
+import org.sssta.qdrawer.ast.node.IfNode
 import org.sssta.qdrawer.lexer.CodeError
 import org.sssta.qdrawer.lexer.Laxer
 import org.sssta.qdrawer.lexer.TokenType
@@ -9,7 +10,7 @@ import org.sssta.qdrawer.statement.expression.Expression
 class IfStatement extends Statement {
 
     Expression condition;
-    ScopeStatement ifScopeStatement;
+    ScopeStatement thenScopeStatement;
     ScopeStatement elseScopeStatement;
 
     static IfStatement parse(Laxer laxer, List<CodeError> errors) {
@@ -49,7 +50,7 @@ class IfStatement extends Statement {
                     return null
                 }
 
-                statement.ifScopeStatement = ifScopeStatement
+                statement.thenScopeStatement = ifScopeStatement
 
                 if (laxer.peekToken()?.type == TokenType.ELSE) {
                     laxer.takeToken()
@@ -70,7 +71,7 @@ class IfStatement extends Statement {
     }
 
     @Override
-    Node createAstNode() {
-        return null
+    IfNode createAstNode() {
+        return new IfNode(condition: condition.createAstNode(), thenNode:thenScopeStatement.createAstNode(),elseNode: elseScopeStatement.createAstNode() )
     }
 }

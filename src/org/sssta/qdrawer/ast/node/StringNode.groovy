@@ -8,9 +8,13 @@ import org.sssta.qdrawer.ast.value.Value
 /**
  * Created by cauchywei on 15/12/13.
  */
-class StringNode extends Node{
+class StringNode extends ExpressionNode{
 
     String stringValue
+
+    StringNode(String stringValue) {
+        this.stringValue = stringValue
+    }
 
     @Override
     Value eval(Scope scope) {

@@ -14,6 +14,10 @@ class ScopeNode extends Node {
 
     List<Node> body
 
+    ScopeNode(List<Node> body) {
+        this.body = body
+    }
+
     void preprocess(Scope scope) {
         //empty for override
     }

@@ -13,7 +13,7 @@ import org.sssta.qdrawer.exception.IllegalTypeError
 class IfNode extends Node {
 
     Node condition
-    Node thanNode
+    Node thenNode
     Node elseNode
 
     @Override
@@ -22,7 +22,7 @@ class IfNode extends Node {
 
         if (condition instanceof BooleanValue) {
             if (condition.asType(BooleanValue).value) {
-                return thanNode.eval(scope)
+                return thenNode.eval(scope)
             } else {
                 return elseNode.eval(scope)
             }
@@ -36,7 +36,7 @@ class IfNode extends Node {
     Type checkType(Scope scope) {
         def conditionType = condition.checkType(scope)
         if (conditionType instanceof BooleanType) {
-               return UnionType.union(thanNode.checkType(scope),elseNode.checkType(scope))
+               return UnionType.union(thenNode.checkType(scope),elseNode.checkType(scope))
         } else {
             Console.addError(new IllegalTypeError(this,'illegal type. require boolean but found ' + condition))
         }

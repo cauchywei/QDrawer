@@ -1,5 +1,6 @@
 package org.sssta.qdrawer.statement
 
+import org.sssta.qdrawer.ast.node.Node
 import org.sssta.qdrawer.lexer.CodeError
 import org.sssta.qdrawer.lexer.Laxer
 import org.sssta.qdrawer.lexer.Token
@@ -30,15 +31,8 @@ class UsingStatement extends Statement{
         return statement
     }
 
-//    @Override
-//    GrammarSymbol createSymbol(boolean secondary) {
-//        return null
-//    }
-//
-//    @Override
-//    AstDeclaration generateAst(SymbolModule symbolModule) {
-//        return null
-//    }
-
-
+    @Override
+    Node createAstNode() {
+        return null
+    }
 }

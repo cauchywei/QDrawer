@@ -3,7 +3,8 @@ package org.sssta.qdrawer.ast.value
 import org.sssta.qdrawer.ast.Scope
 import org.sssta.qdrawer.ast.SymbolInfo
 import org.sssta.qdrawer.ast.node.Node
-import org.sssta.qdrawer.ast.node.Variable
+import org.sssta.qdrawer.ast.node.ScopeNode
+import org.sssta.qdrawer.ast.node.VariableNode
 import org.sssta.qdrawer.ast.type.Type
 
 /**
@@ -11,9 +12,9 @@ import org.sssta.qdrawer.ast.type.Type
  */
 class FunctionValue extends Value {
 
-    List<Variable> params
-    List<Node> body
-    Variable name
+    List<VariableNode> params
+    ScopeNode body
+    VariableNode name
     Scope parentScope
 
     @Override
@@ -31,19 +32,12 @@ class FunctionValue extends Value {
         def scope = new Scope(parentScope)
         args.eachWithIndex { Node arg, int i -> scope.putSymbol(params[i].name.value,new SymbolInfo(type: arg.checkType(scope),value: arg.eval(scope))) }
 
-        def lastValue = new VoidValue()
-        for (int i = 0; i < body.size(); i++) {
-            def node = body[i]
-            lastValue = node.eval(scope)
-            if (scope.returnFlag) {
-                break
-            }
-        }
+        def ret = body.eval(scope)
 
         if (scope.returnFlag) {
             return scope.returnValue
         } else {
-            return lastValue
+            return ret
         }
     }
 

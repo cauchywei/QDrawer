@@ -14,7 +14,7 @@ import org.sssta.qdrawer.exception.IllegalTypeError
 class PowerNode extends PrimitiveNode {
 
     Node base
-    Node index
+    Node exponent
 
     PowerNode() {
         super('**', 2)
@@ -30,10 +30,10 @@ class PowerNode extends PrimitiveNode {
             return null
         }
 
-        def rightV = index.eval(scope)
+        def rightV = exponent.eval(scope)
 
         if (!(rightV instanceof NumericValue)) {
-            Console.addError(new IllegalTypeError(index,'illegal type:require Numeric but found ' + rightV.type))
+            Console.addError(new IllegalTypeError(exponent,'illegal type:require Numeric but found ' + rightV.type))
             return null
         }
 
@@ -49,10 +49,10 @@ class PowerNode extends PrimitiveNode {
             Console.addError(new IllegalTypeError(base,'illegal type:require Numeric but found ' + leftType))
         }
 
-        def rightType = index.checkType(scope)
+        def rightType = exponent.checkType(scope)
 
         if (!(rightType instanceof NumericValue)) {
-            Console.addError(new IllegalTypeError(index,'illegal type:require Numeric but found ' + rightType))
+            Console.addError(new IllegalTypeError(exponent,'illegal type:require Numeric but found ' + rightType))
         }
         return Type.NUMERIC
     }

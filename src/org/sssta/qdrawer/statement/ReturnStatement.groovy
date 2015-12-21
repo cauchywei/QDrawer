@@ -1,4 +1,6 @@
 package org.sssta.qdrawer.statement
+
+import org.sssta.qdrawer.ast.node.ReturnNode
 import org.sssta.qdrawer.lexer.CodeError
 import org.sssta.qdrawer.lexer.Laxer
 import org.sssta.qdrawer.lexer.TokenType
@@ -24,5 +26,10 @@ class ReturnStatement extends Statement{
         }
 
         return statement
+    }
+
+    @Override
+    ReturnNode createAstNode() {
+        return new ReturnNode(returnExpression.createAstNode())
     }
 }

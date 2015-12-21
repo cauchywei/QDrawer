@@ -11,20 +11,20 @@ import org.sssta.qdrawer.exception.IllegalOperateError
  */
 class FunctionNode extends Node {
 
-    Variable funcName
-    List<Variable> args
-    List<Node> body
+    VariableNode funcName
+    List<VariableNode> args
+    ScopeNode scopeNode
 
     @Override
-    Value eval(Scope scope) {
+    Value eval(Scope envr) {
 
-        if (scope.exist(funcName.name.value)) {
+        if (envr.exist(funcName.name.value)) {
             Console.addError(new IllegalOperateError(this,funcName.name.value + 'is a func, it already defined'))
         }
 
-        def value = new FunctionValue(name: funcName, params: args, body: body, parentScope: scope)
+        def value = new FunctionValue(name: funcName, params: args, body: body, parentScope: envr)
         def funcSymbol = new SymbolInfo(value: value,type: Type.FUNCTION)
-        scope.putSymbol(funcName.name.value,funcSymbol)
+        envr.putSymbol(funcName.name.value,funcSymbol)
 
         return value
     }

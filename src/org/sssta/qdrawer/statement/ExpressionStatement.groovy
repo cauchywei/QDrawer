@@ -1,5 +1,6 @@
 package org.sssta.qdrawer.statement
 
+import org.sssta.qdrawer.ast.node.ExpressionNode
 import org.sssta.qdrawer.statement.expression.Expression
 
 /**
@@ -10,5 +11,10 @@ class ExpressionStatement extends Statement{
 
     ExpressionStatement(Expression expression) {
         this.expression = expression
+    }
+
+    @Override
+    ExpressionNode createAstNode() {
+        return expression.createAstNode()
     }
 }

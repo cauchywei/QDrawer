@@ -10,9 +10,14 @@ import org.sssta.qdrawer.exception.IllegalOperateError
 /**
  * Created by cauchywei on 15/12/15.
  */
-class ConstDeclarationNode extends Node {
-    Variable variable
+class ConstDeclarationNode extends ExpressionNode {
+    VariableNode variable
     Node value
+
+    ConstDeclarationNode(VariableNode variable, Node value) {
+        this.variable = variable
+        this.value = value
+    }
 
     @Override
     Value eval(Scope scope) {

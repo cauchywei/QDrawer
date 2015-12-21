@@ -11,10 +11,15 @@ import org.sssta.qdrawer.lexer.TokenType
 /**
  * Created by cauchywei on 15/12/13.
  */
-class AssignmentNode extends Node {
+class AssignmentNode extends ExpressionNode {
 
-    Variable variable
+    VariableNode variable
     Node value
+
+    AssignmentNode(VariableNode variable, Node value) {
+        this.variable = variable
+        this.value = value
+    }
 
     @Override
     Value eval(Scope scope) {

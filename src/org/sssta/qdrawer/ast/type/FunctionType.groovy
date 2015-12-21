@@ -1,6 +1,6 @@
 package org.sssta.qdrawer.ast.type
 
-import org.sssta.qdrawer.ast.node.Variable
+import org.sssta.qdrawer.ast.node.VariableNode
 
 /**
  * Created by cauchywei on 15/12/13.
@@ -8,7 +8,7 @@ import org.sssta.qdrawer.ast.node.Variable
 class FunctionType extends Type {
 
     List<Type> types
-    Variable funcName
+    VariableNode funcName
 
     FunctionType() {
         super('Function')

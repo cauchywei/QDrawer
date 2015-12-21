@@ -1,5 +1,7 @@
 package org.sssta.qdrawer.statement
 
+import org.sssta.qdrawer.ast.node.ForNode
+import org.sssta.qdrawer.ast.node.VariableNode
 import org.sssta.qdrawer.lexer.CodeError
 import org.sssta.qdrawer.lexer.Laxer
 import org.sssta.qdrawer.lexer.Token
@@ -12,7 +14,7 @@ import org.sssta.qdrawer.statement.expression.Expression
 class ForStatement extends Statement {
 
     Token forVariable
-    Expression start,end,step
+    Expression from, to,step
     ScopeStatement scopeStatement
 
     static ForStatement parse(Laxer laxer, List<CodeError> errors) {
@@ -46,7 +48,7 @@ class ForStatement extends Statement {
             return null
         }
 
-        statement.start = start
+        statement.from = start
 
         if (!laxer.peekToken().type == TokenType.TO) {
             errors << new CodeError(col: laxer.col, row: laxer.row, message: 'Excepted to symbol.')
@@ -61,7 +63,7 @@ class ForStatement extends Statement {
             return null
         }
 
-        statement.end = end
+        statement.to = end
 
 
         if (!laxer.peekToken().type == TokenType.STEP) {
@@ -90,4 +92,8 @@ class ForStatement extends Statement {
         return statement
     }
 
+    @Override
+    ForNode createAstNode() {
+        return new ForNode(var: new VariableNode(forVariable),from: from.createAstNode(),to: to.createAstNode(),step: step.createAstNode(),body: scopeStatement.createAstNode())
+    }
 }
