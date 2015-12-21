@@ -1,12 +1,13 @@
 package org.sssta.qdrawer.ast.node
-
 import org.sssta.qdrawer.Console
 import org.sssta.qdrawer.ast.Scope
 import org.sssta.qdrawer.ast.SymbolInfo
 import org.sssta.qdrawer.ast.type.Type
+import org.sssta.qdrawer.ast.value.NumericValue
+import org.sssta.qdrawer.ast.value.PointValue
 import org.sssta.qdrawer.ast.value.Value
 import org.sssta.qdrawer.exception.IllegalOperateError
-
+import org.sssta.qdrawer.lexer.TokenType
 /**
  * Created by cauchywei on 15/12/13.
  */
@@ -32,11 +33,35 @@ class AssignmentNode extends Node {
             return null
         }
 
-//        if (variable.checkType(scope) == Type.UNDEFINED) {
-            scope.putType(variable.name.value, valueType)
-//        }
-
         def val = value.eval(scope)
+
+
+        if (variable.name.type == TokenType.ORIGIN) {
+            if (!(val instanceof PointValue)) {
+                def trans = val.asType(PointValue)
+                scope.graphics2D?.translate(trans.x.value, trans.y.value)
+            } else {
+                Console.addError(new IllegalOperateError(this,'origin must be a Point.but now is ' + valueType.name))
+                return null
+            }
+        }else if (variable.name.type == TokenType.ROT) {
+            if (!(val instanceof NumericValue)) {
+                scope.graphics2D?.rotate(val.asType(NumericValue).value)
+            } else {
+                Console.addError(new IllegalOperateError(this,'rot must be a Number.but now is ' + valueType.name))
+                return null
+            }
+        }else if (variable.name.type == TokenType.SCALE) {
+            if (!(val instanceof NumericValue)) {
+                def rot = val.asType(PointValue)
+                scope.graphics2D?.translate(rot.x.value, rot.y.value)
+            } else {
+                Console.addError(new IllegalOperateError(this,'scale must be a Point.but now is ' + valueType.name))
+                return null
+            }
+        }
+
+        scope.putType(variable.name.value, valueType)
         scope.putValue(variable.name.value, val)
 
         return val

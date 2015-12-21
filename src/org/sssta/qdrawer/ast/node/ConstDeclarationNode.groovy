@@ -17,6 +17,8 @@ class ConstDeclarationNode extends Node {
     @Override
     Value eval(Scope scope) {
 
+        //TODO to prevent constlize our key variable such as origin,background etc.
+
         if (scope.exist(variable.name.value)) {
             Console.addError(new IllegalOperateError(this,variable.name.value + ' is const, it already defined'))
             return variable.eval(scope)
@@ -27,6 +29,9 @@ class ConstDeclarationNode extends Node {
         if (valueType == null) {
             return null
         }
+
+        if (variable.name.value.equalsIgnoreCase(""))
+
         scope.putType(variable.name.value, valueType)
 
         def val = value.eval(scope)
