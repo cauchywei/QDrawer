@@ -37,7 +37,7 @@ class PowerNode extends PrimitiveNode {
             return null
         }
 
-        return new NumericValue(Math.pow(leftV.asType(NumericValue).value,rightV.asType(NumericValue).value))
+        return new NumericValue(Math.pow(leftV.value,rightV.value))
     }
 
     @Override

@@ -40,7 +40,7 @@ class GTNode extends PrimitiveNode {
             return null
         }
 
-        return new BooleanValue(leftV.asType(NumericValue).value > rightV.asType(NumericValue).value)
+        return new BooleanValue(leftV.value > rightV.value)
     }
 
     @Override

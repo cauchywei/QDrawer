@@ -33,7 +33,7 @@ class NotNode extends PrimitiveNode {
             return null
         }
 
-        return new BooleanValue(!value.asType(BooleanValue).value)
+        return new BooleanValue(!value.value)
     }
 
     @Override

@@ -37,7 +37,7 @@ class MultNode extends PrimitiveNode {
             return null
         }
 
-        return new NumericValue(leftV.asType(NumericValue).value * rightV.asType(NumericValue).value)
+        return new NumericValue(leftV.value * rightV.value)
     }
 
     @Override

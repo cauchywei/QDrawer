@@ -37,12 +37,12 @@ class ModNode extends PrimitiveNode {
             return null
         }
 
-        if (rightV.asType(NumericValue).value.intValue() == 0) {
+        if (rightV.value.intValue() == 0) {
             Console.addError(new IllegalTypeError(right,'illegal type:require Numeric but found ' + rightV.type))
             return null
         }
 
-        return new NumericValue(leftV.asType(NumericValue).value.intValue() % (int)rightV.asType(NumericValue).value.intValue())
+        return new NumericValue(leftV.value.intValue() % (int)rightV.value.intValue())
     }
 
     @Override

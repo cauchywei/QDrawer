@@ -28,9 +28,9 @@ class NENode extends PrimitiveNode {
         def rightV = right.eval(scope)
 
         if (leftV instanceof NumericValue && rightV instanceof NumericValue) {
-            return new BooleanValue(Double.compare(leftV.asType(NumericValue).value,rightV.asType(NumericValue).value) != 0)
+            return new BooleanValue(Double.compare(leftV.value,rightV.value) != 0)
         }else if (leftV instanceof BooleanValue && rightV instanceof BooleanValue) {
-            return new BooleanValue(leftV.asType(BooleanValue).value != rightV.asType(BooleanValue).value)
+            return new BooleanValue(leftV.value != rightV.value)
         } else {
             Console.addError(new IllegalTypeError(this, 'unsupported comparing between ' + leftV.type + ' and '+ rightV.type + 'two types'))
             return null
