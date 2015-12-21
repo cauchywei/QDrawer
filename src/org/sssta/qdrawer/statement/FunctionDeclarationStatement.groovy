@@ -77,6 +77,6 @@ class FunctionDeclarationStatement extends Statement {
     Node createAstNode() {
         List<VariableNode> args = []
         arguments.each { args << new VariableNode(it.identifier)}
-        return new FunctionNode(funcName:functionName.createAstNode(),args:args,scopeNode: scopeStatement.createAstNode() )
+        return new FunctionNode(funcName:functionName.createAstNode(),args:args, body: scopeStatement.createAstNode() )
     }
 }

@@ -9,7 +9,7 @@ import java.util.List
  */
 class Ast {
 
-    Scope global
+    Scope global = new Scope()
     List<Node> body
 
     void eval() {

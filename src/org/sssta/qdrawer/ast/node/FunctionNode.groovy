@@ -13,7 +13,7 @@ class FunctionNode extends Node {
 
     VariableNode funcName
     List<VariableNode> args
-    ScopeNode scopeNode
+    ScopeNode body
 
     @Override
     Value eval(Scope envr) {

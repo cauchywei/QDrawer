@@ -21,7 +21,7 @@ class IfNode extends Node {
         def condition = condition.eval(scope)
 
         if (condition instanceof BooleanValue) {
-            if (condition.asType(BooleanValue).value) {
+            if (condition.value) {
                 return thenNode.eval(scope)
             } else {
                 return elseNode.eval(scope)

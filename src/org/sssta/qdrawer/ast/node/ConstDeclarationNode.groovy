@@ -35,8 +35,6 @@ class ConstDeclarationNode extends ExpressionNode {
             return null
         }
 
-        if (variable.name.value.equalsIgnoreCase(""))
-
         scope.putType(variable.name.value, valueType)
 
         def val = value.eval(scope)

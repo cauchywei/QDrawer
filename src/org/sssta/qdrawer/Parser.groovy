@@ -23,25 +23,39 @@ class Parser {
     Module parse(){
 
         def module = new Module()
-
+        eatComment()
         module.name = ModuleStatement.parse(laxer,errors).name
         matchSemico()
-        while (laxer.peekToken()?.type == TokenType.IMPORT) {
+        eatComment()
+
+        while (laxer.peekToken()?.type == TokenType.IMPORT ) {
             module.importStatements << ImportStatement.parse(laxer, errors)
             matchSemico()
+            eatComment()
+        }
+
+        while (laxer.peekToken()?.type == TokenType.COMMENT) {
+            laxer.takeToken()
         }
 
         while (laxer.peekToken()?.type == TokenType.USING) {
             module.usingStatements << UsingStatement.parse(laxer, errors)
             matchSemico()
+            eatComment()
         }
 
         def statement
-        while (laxer.hasNext() && (statement = Statement.parse(laxer,errors))) {
+        while (laxer.hasNext() && (statement = Statement.parse(laxer,errors)) != null) {
             module.statements << statement
         }
 
         return module
+    }
+
+    void eatComment() {
+        while (laxer.peekToken()?.type == TokenType.COMMENT) {
+            laxer.takeToken()
+        }
     }
 
     void matchSemico() {

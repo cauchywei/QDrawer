@@ -41,7 +41,7 @@ class ForNode extends Node {
 
         def loopVar = var.name.value
         def scope = new Scope(envr)
-        scope.putSymbol(loopVar,new SymbolInfo(type :Type.NUMERIC,value :new NumericValue(fromVal.value)))
+        scope.putSymbol(loopVar,new SymbolInfo(Type.NUMERIC,new NumericValue(fromVal.value)))
 
         def lastVal = new VoidValue()
         OUTER:for (double i = fromVal.value; i < toVal.value; i+= stepVal.value) {

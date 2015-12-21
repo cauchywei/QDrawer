@@ -1,6 +1,7 @@
 package org.sssta.qdrawer.ast
 
 import org.sssta.qdrawer.ast.type.Type
+import org.sssta.qdrawer.ast.value.UndefinedValue
 import org.sssta.qdrawer.ast.value.Value
 import org.sssta.qdrawer.ast.value.VoidValue
 
@@ -18,8 +19,8 @@ class Scope {
     static int pointRadius = DEFAULT_POINT_RADIUS
 
     Scope parent
-    HashMap<String, SymbolInfo> table
-    List<Class> imports = [];
+    HashMap<String, SymbolInfo> table = new HashMap<>()
+    List<Class> usings = [];
 
 
     boolean isFunctionScope = false
@@ -47,8 +48,10 @@ class Scope {
     public boolean exist(String name) {
         if (table.containsKey(name)) {
             return true
-        } else {
+        } else if (parent != null) {
             return parent.exist(name)
+        } else {
+            return false
         }
     }
 
@@ -81,8 +84,13 @@ class Scope {
 
     public Value getValue(String name) {
         def localVal = getValueLocal(name)
-        if (localVal == null) {
-            return parent.getValue(name)
+        if (localVal == null ) {
+            if (parent != null) {
+                return parent.getValue(name)
+            }
+            else {
+                return new UndefinedValue()
+            }
         }
         return localVal
     }
@@ -98,7 +106,11 @@ class Scope {
     public Type getType(String name) {
         def localType = getTypeLocal(name)
         if (localType == null) {
-            return parent.getType(name)
+            if (parent != null) {
+                return parent.getType(name)
+            } else {
+                return Type.UNDEFINED
+            }
         }
         return localType
     }
@@ -118,7 +130,11 @@ class Scope {
     public SymbolInfo getSymbol(String name) {
         def local = table.get(name)
         if (local == null) {
-            return parent.getSymbol(name)
+            if (parent != null) {
+                return parent.getSymbol(name)
+            }else{
+                return null
+            }
         }
         return local
     }
@@ -127,19 +143,18 @@ class Scope {
         table.get(name)
     }
 
-    public List<Class> getImports() {
+    public List<Class> getUsings() {
         if (parent != null) {
-            return parent.getImports()
+            return parent.getUsings()
         }
-
-        return imports
+        return usings
     }
 
     public Scope copy() {
         def copy = new Scope()
         copy.parent = parent
         copy.table = new HashMap<>()
-        copy.table.putAll(table)
+        copy.putAll(this)
         copy.isFunctionScope = isFunctionScope
         copy.returnFlag = returnFlag
         copy.returnValue = returnValue

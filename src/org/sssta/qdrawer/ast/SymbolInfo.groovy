@@ -12,9 +12,22 @@ class SymbolInfo extends HashMap<String,BaseProperty> implements Cloneable {
     static final String KEY_TYPE = "type"
     static final String KEY_LINE_NUM = "line_num"
 
-    Type type = Type.UNDEFINED
-    Value value = new UndefinedValue()
-    boolean isConst
+    SymbolInfo() {
+        this(Type.UNDEFINED,new UndefinedValue())
+    }
+
+    SymbolInfo(Type type, Value value) {
+        setType(type)
+        setValue(value)
+    }
+
+    Type getType() {
+        return get(KEY_TYPE) as Type
+    }
+
+    Value getValue() {
+        return get(KEY_VALUE) as Value
+    }
 
     public void setType(Type type) {
         //TODO interrupted for const var?

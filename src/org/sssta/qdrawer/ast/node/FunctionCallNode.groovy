@@ -2,12 +2,14 @@ package org.sssta.qdrawer.ast.node
 
 import org.sssta.qdrawer.Console
 import org.sssta.qdrawer.ast.Scope
+import org.sssta.qdrawer.ast.type.FunctionType
 import org.sssta.qdrawer.ast.type.NumericType
 import org.sssta.qdrawer.ast.type.PointType
 import org.sssta.qdrawer.ast.type.StringType
 import org.sssta.qdrawer.ast.type.Type
 import org.sssta.qdrawer.ast.value.*
 import org.sssta.qdrawer.exception.IllegalOperateError
+import org.sssta.qdrawer.lexer.CodeError
 
 /**
  * Created by cauchywei on 15/12/15.
@@ -22,10 +24,11 @@ class FunctionCallNode extends ExpressionNode {
 
         //may it is a draw func :)
         if (funcName.name.value.equalsIgnoreCase("draw")) {
+            def type = args[0].checkType(scope)
             if (args.size() == 1 && args[0].checkType(scope) instanceof PointType) {
                 def point = args[0].eval(scope).asType(PointValue)
                 scope.graphics2D?.drawOval(point.x.value.intValue(), point.y.value.intValue(), Scope.pointRadius, Scope.pointRadius)
-            } else if (args.size() == 2 && args[0].checkType(scope) instanceof NumericType && args[1].checkType(scope) instanceof NumericType) {
+            } else if (args.size() == 2 && type instanceof NumericType && args[1].checkType(scope) instanceof NumericType) {
                 scope.graphics2D?.drawOval(args[0].eval(scope).asType(NumericValue).value.intValue(),
                         args[1].eval(scope).asType(NumericValue).value.intValue(), Scope.pointRadius, Scope.pointRadius)
             } else if (args.size() == 3
@@ -38,9 +41,10 @@ class FunctionCallNode extends ExpressionNode {
                         args[2].eval(scope).asType(NumericValue).value.intValue())
 
             } else {
-                Console.addError(new IllegalOperateError(this, 'draw()\'s argument(s) must be a Point or two Numeric.'))
+                Console.addError(new IllegalOperateError(funcName, 'draw()\'s argument(s) must be a Point or two Numeric.'))
                 return null
             }
+            return new VoidValue()
         }
 
         //if the function is not declared in qdrawer code then search the java lib
@@ -58,7 +62,7 @@ class FunctionCallNode extends ExpressionNode {
             } else {
                 //otherwise search the import list
 
-                def imports = scope.getImports()
+                def imports = scope.getUsings()
                 clazz = imports.find { it.methods.any { it.name.equalsIgnoreCase(name) } }
                 methName = name
             }
@@ -103,7 +107,7 @@ class FunctionCallNode extends ExpressionNode {
 
 
         } else {
-            def func = scope.getType(funcName.name.value)
+            def func = scope.getValue(funcName.name.value)
 
             if (func instanceof FunctionValue) {
                 def ret = func.asType(FunctionValue).eval(args)
@@ -152,7 +156,7 @@ class FunctionCallNode extends ExpressionNode {
             } else {
                 //otherwise search the import list
 
-                def imports = scope.getImports()
+                def imports = scope.getUsings()
                 clazz = imports.find { it.methods.any { it.name.equalsIgnoreCase(name) } }
                 methName = name
             }
@@ -166,12 +170,12 @@ class FunctionCallNode extends ExpressionNode {
 
                 def count = meth.getParameterCount()
                 if (count != args.size()) {
-                    Console.addError(new IllegalOperateError(this, funcName.name.value + ' arguments size is not matched.'))
+                    Console.addError(new CodeError(this, funcName.name.value + ' arguments size is not matched.'))
                     return null
                 }
 
                 if (count > 3) {
-                    Console.addError(new IllegalOperateError(this, ' arguments size is not matched,it must be less than 3.'))
+                    Console.addError(new CodeError(this, ' arguments size is not matched,it must be less than 3.'))
                 }
 
                 def retType = meth.returnType
@@ -194,12 +198,12 @@ class FunctionCallNode extends ExpressionNode {
         } else {
             def func = scope.getType(funcName.name.value)
 
-            if (func instanceof FunctionValue) {
-                return func.asType(FunctionValue).checkType(args)
+            if (func instanceof FunctionType) {
+                return func
             }
         }
 
-        Console.addError(new IllegalOperateError(this, funcName.name.value + 'is not a function, it not defined'))
+        Console.addError(new CodeError(this, funcName.name.value + 'is not a function, it not defined'))
         return null
     }
 }

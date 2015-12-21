@@ -22,7 +22,7 @@ class Module  {
         importStatements.each {
             def impLib = it.getName().value
             try {
-                ast.global.imports << Class.forName(impLib)
+                ast.global.usings << Class.forName(impLib)
             } catch (e) {
                 Console.errors << new CodeError(it.name,"Can't found the Java Class " + impLib)
             }

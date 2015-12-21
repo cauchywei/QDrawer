@@ -42,11 +42,16 @@ class StatementTest extends GroovyTestCase{
                         b = -1;
                     }
 
-                    func sin(v){
-                        return sin(v);
+                    func add(a,b)
+                    {
+                        return a+b;
                     }
 
-                    sin(2*PI);
+                    func max(a,b){
+                        if(a>b) a else b
+                    }
+
+                    c sin(2*PI);
 
                     '''
 
