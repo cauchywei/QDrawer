@@ -1,4 +1,4 @@
-package test
+package unitTest
 import org.sssta.qdrawer.exception.ReachTheEndOfCodeException
 import org.sssta.qdrawer.lexer.Laxer
 import org.sssta.qdrawer.lexer.TokenType

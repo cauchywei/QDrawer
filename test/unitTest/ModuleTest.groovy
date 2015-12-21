@@ -1,3 +1,5 @@
+package unitTest
+
 import org.apache.tools.ant.filters.StringInputStream
 import org.junit.Test
 import org.sssta.qdrawer.Console

@@ -18,6 +18,12 @@ class Module  {
 
     Ast build() {
         def ast = new Ast()
+
+        //TODO process import
+        importStatements.each {
+
+        }
+
         usingStatements.each {
             def usingLib = it.library.value
             try {
@@ -27,7 +33,6 @@ class Module  {
             }
         }
 
-        //TODO process using
 
         List<Node> moduleBody = []
 

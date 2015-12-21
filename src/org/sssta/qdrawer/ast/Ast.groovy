@@ -9,20 +9,30 @@ import java.util.List
  */
 class Ast {
 
-    Scope global = new Scope()
+    Scope global
     List<Node> body
 
-    void eval() {
-        def clone = global.copy()
+    Ast(Scope global) {
+        this.global = global
+    }
 
-        clone.graphics2D?.translate(0,0)
-        clone.graphics2D?.setColor(Color.RED)
+    Ast() {
+       global = new Scope()
+    }
+
+    Scope eval() {
+        def cloneScope = global.copy()
+
+        cloneScope.graphics2D?.translate(0,0)
+        cloneScope.graphics2D?.setColor(Color.RED)
 
         for (int i = 0; i < body.size(); i++) {
-            body.get(i).eval(global)
+            body.get(i).eval(cloneScope)
             if (!Console.errors.isEmpty()) {
                 break
             }
         }
+
+        return cloneScope
     }
 }
