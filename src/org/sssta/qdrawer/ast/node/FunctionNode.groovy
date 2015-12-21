@@ -22,7 +22,7 @@ class FunctionNode extends Node {
             Console.addError(new IllegalOperateError(this,funcName.name.value + 'is a func, it already defined'))
         }
 
-        def value = new FunctionValue(name: funcName, args: args, body: body)
+        def value = new FunctionValue(name: funcName, params: args, body: body, parentScope: scope)
         def funcSymbol = new SymbolInfo(value: value,type: Type.FUNCTION)
         scope.putSymbol(funcName.name.value,funcSymbol)
 

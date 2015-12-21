@@ -1,14 +1,16 @@
 package org.sssta.qdrawer.ast
+
 import org.sssta.qdrawer.ast.type.Type
 import org.sssta.qdrawer.ast.value.Value
+import org.sssta.qdrawer.ast.value.VoidValue
 
-import java.awt.Graphics2D
-import java.awt.Paint
+import java.awt.*
+import java.util.List
 
 /**
  * Created by cauchywei on 15/9/14.
  */
-class Scope{
+class Scope {
 
     public static final int DEFAULT_POINT_RADIUS = 2
 
@@ -17,10 +19,11 @@ class Scope{
     static int pointRadius = DEFAULT_POINT_RADIUS
 
     Scope parent
-    HashMap<String,SymbolInfo> table
+    HashMap<String, SymbolInfo> table
     List<Class> imports = [];
 
-
+    boolean returnFlag = false
+    Value returnValue = new VoidValue()
 
     Scope() {
     }
@@ -31,7 +34,7 @@ class Scope{
 
     public void putAll(Scope other) {
         for (String name : other.table.keySet()) {
-            table.put(name,other.table.get(name));
+            table.put(name, other.table.get(name));
         }
     }
 
@@ -48,6 +51,7 @@ class Scope{
     }
 
     public void putValue(String name, Value value) {
+
         def elm
         if (!exist(name)) {
             elm = new SymbolInfo()
@@ -57,7 +61,7 @@ class Scope{
 
         elm.setValue(value)
 
-        table.put(name,elm)
+        table.put(name, elm)
     }
 
     public void putType(String name, Type type) {
@@ -70,7 +74,7 @@ class Scope{
 
         elm.setType(type)
 
-        table.put(name,elm)
+        table.put(name, elm)
     }
 
     public Value getValue(String name) {
@@ -106,7 +110,7 @@ class Scope{
     }
 
     public void putSymbol(String name, SymbolInfo symbol) {
-        table.put(name,symbol)
+        table.put(name, symbol)
     }
 
     public SymbolInfo getSymbol(String name) {

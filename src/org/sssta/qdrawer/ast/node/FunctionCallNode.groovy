@@ -4,6 +4,7 @@ import org.sssta.qdrawer.Console
 import org.sssta.qdrawer.ast.Scope
 import org.sssta.qdrawer.ast.type.NumericType
 import org.sssta.qdrawer.ast.type.PointType
+import org.sssta.qdrawer.ast.type.StringType
 import org.sssta.qdrawer.ast.type.Type
 import org.sssta.qdrawer.ast.value.*
 import org.sssta.qdrawer.exception.IllegalOperateError
@@ -27,14 +28,20 @@ class FunctionCallNode extends Node {
             } else if (args.size() == 2 && args[0].checkType(scope) instanceof NumericType && args[1].checkType(scope) instanceof NumericType) {
                 scope.graphics2D?.drawOval(args[0].eval(scope).asType(NumericValue).value.intValue(),
                         args[1].eval(scope).asType(NumericValue).value.intValue(), Scope.pointRadius, Scope.pointRadius)
+            } else if (args.size() == 3
+                    && args[0].checkType(scope) instanceof StringType
+                    && args[1].checkType(scope) instanceof NumericType
+                    && args[2].checkType(scope) instanceof NumericType) {
+
+                scope.graphics2D?.drawString(args[0].eval(scope).asType(StringValue).value,
+                        args[1].eval(scope).asType(NumericValue).value.intValue(),
+                        args[2].eval(scope).asType(NumericValue).value.intValue())
+
             } else {
                 Console.addError(new IllegalOperateError(this, 'draw()\'s argument(s) must be a Point or two Numeric.'))
                 return null
             }
         }
-
-
-        boolean methodNotFound = true
 
         //if the function is not declared in qdrawer code then search the java lib
         if (!scope.exist(funcName.name.value)) {
@@ -58,8 +65,6 @@ class FunctionCallNode extends Node {
 
 
             if (clazz != null && methName != null) {
-
-                methodNotFound = false
 
                 def meth = clazz.getMethods().find({ it.name == methName })
 
@@ -97,6 +102,14 @@ class FunctionCallNode extends Node {
             }
 
 
+        } else {
+            def func = scope.getType(funcName.name.value)
+
+            if (func instanceof FunctionValue) {
+                def ret = func.asType(FunctionValue).eval(args)
+                return ret
+            }
+
         }
 
         Console.addError(new IllegalOperateError(this, funcName.name.value + 'is not a function, it not defined'))
@@ -113,13 +126,16 @@ class FunctionCallNode extends Node {
                 return Type.VOID
             } else if (args.size() == 2 && args[0].checkType(scope) instanceof NumericType && args[1].checkType(scope) instanceof NumericType) {
                 return Type.VOID
+            }else if (args.size() == 3
+                    && args[0].checkType(scope) instanceof StringType
+                    && args[1].checkType(scope) instanceof NumericType
+                    && args[2].checkType(scope) instanceof NumericType) {
+                return Type.VOID
             } else {
                 Console.addError(new IllegalOperateError(this, 'draw()\'s argument(s) must be a Point or two Numeric.'))
                 return null
             }
         }
-
-        boolean methodNotFound = true
 
         //if the function is not declared in qdrawer code then search the java lib
         if (!scope.exist(funcName.name.value)) {
@@ -175,6 +191,12 @@ class FunctionCallNode extends Node {
             }
 
 
+        } else {
+            def func = scope.getType(funcName.name.value)
+
+            if (func instanceof FunctionValue) {
+                return func.asType(FunctionValue).checkType(args)
+            }
         }
 
         Console.addError(new IllegalOperateError(this, funcName.name.value + 'is not a function, it not defined'))
