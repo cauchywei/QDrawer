@@ -5,6 +5,18 @@ const PI = 3.1415926;
 
 origin = (150,150);
 
+func drawSin(xScale,yScale,t){
+	for i from 0 to t*PI step PI/150 {
+		draw(i*xScale,sin(i)*yScale);
+	}
+}
+
+func drawCos(xScale,yScale,t){
+	for i from 0 to t*PI step PI/150 {
+		draw(i*xScale,cos(i)*yScale);
+	}
+}
+
 ///////Lollipop
 
 for i from 0 to 20*PI step PI/150 {
@@ -23,22 +35,21 @@ scale = 0.5;
 
 origin = (250,0);
 
-for times from 0 to 4 step 1 {
+for times from 0 to 6 step 1 {
 	origin = (0,20);
-	for i from 0 to 6*PI step PI/200 {
-
-		draw(i*15,20*cos(i));
-	}
+        if(times % 2 == 0){
+            	drawCos(15,20,10);
+        }else{
+            	drawSin(15,20,10);
+        }
 }
 
-origin = (-250,300);
+origin = (-250,250);
 scale = 0.5;
 for times from 0 to 8 step 1 {
-	origin = (0,20);
+	origin = (0,30); 
 	rot = PI/4;
-	for i from 0 to 5*PI step PI/150 {
-		draw(i*10,20*cos(i));
-	}
+	drawSin(10,20,5);
 }
 
 origin = (450,0);

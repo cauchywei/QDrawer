@@ -105,8 +105,10 @@ class ModuleTest extends GroovyTestCase {
                     rot = PI/4;
                     -- PI = 2;
                     a = 2;
-                    if(a > 1){
+                    if(a % 2 != 0){
                         a = -1;
+                    }else{
+                        a = 1;
                     }
 
                     '''
