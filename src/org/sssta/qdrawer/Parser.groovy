@@ -24,7 +24,12 @@ class Parser {
         def errors = Console.errors
         def module = new Module()
         eatComment()
-        module.name = ModuleStatement.parse(laxer,errors).name
+
+        def moduleDecl = ModuleStatement.parse(laxer, errors)
+        if (moduleDecl == null) {
+            return null
+        }
+        module.name = moduleDecl.name
         matchSemico()
         eatComment()
 

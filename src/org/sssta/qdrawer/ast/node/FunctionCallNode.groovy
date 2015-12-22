@@ -25,11 +25,20 @@ class FunctionCallNode extends ExpressionNode {
         //may it is a draw func :)
         if (funcName.name.value.equalsIgnoreCase("draw")) {
             def type = args[0].checkType(scope)
-            if (args.size() == 1 && args[0].checkType(scope) instanceof PointType) {
-                def point = args[0].eval(scope).asType(PointValue)
-                scope.graphics2D?.drawOval(point.x.value.intValue(), point.y.value.intValue(), Scope.pointRadius, Scope.pointRadius)
+            if (args.size() == 1 ) {
+                def firstArgType = args[0].checkType(scope)
+                if (firstArgType instanceof PointType) {
+                    def point = args[0].eval(scope).asType(PointValue)
+                    scope.graphics2D?.fillOval(point.x.value.intValue(), point.y.value.intValue(), Scope.pointRadius, Scope.pointRadius)
+                }else if (firstArgType instanceof StringValue) {
+                    scope.graphics2D?.drawString(args[0].eval(scope).asType(StringValue).value,0,0);
+                }else{
+                    Console.addError(new IllegalOperateError(funcName, 'draw()\'s argument(s) must be a Point or two Numeric or a String.'))
+                    return null
+                }
+
             } else if (args.size() == 2 && type instanceof NumericType && args[1].checkType(scope) instanceof NumericType) {
-                scope.graphics2D?.drawOval(args[0].eval(scope).asType(NumericValue).value.intValue(),
+                scope.graphics2D?.fillOval(args[0].eval(scope).asType(NumericValue).value.intValue(),
                         args[1].eval(scope).asType(NumericValue).value.intValue(), Scope.pointRadius, Scope.pointRadius)
             } else if (args.size() == 3
                     && args[0].checkType(scope) instanceof StringType
@@ -41,7 +50,7 @@ class FunctionCallNode extends ExpressionNode {
                         args[2].eval(scope).asType(NumericValue).value.intValue())
 
             } else {
-                Console.addError(new IllegalOperateError(funcName, 'draw()\'s argument(s) must be a Point or two Numeric.'))
+                Console.addError(new IllegalOperateError(funcName, 'draw()\'s argument(s) must be a Point or two Numeric or a String.'))
                 return null
             }
             return new VoidValue()

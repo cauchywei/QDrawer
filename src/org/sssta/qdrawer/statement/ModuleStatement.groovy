@@ -16,6 +16,7 @@ class ModuleStatement extends Statement {
         def statement = new ModuleStatement()
         if (laxer.peekToken()?.type != TokenType.MODULE) {
             errors << new CodeError(col: laxer.col, row: laxer.row, message: 'Excepted module declaration.')
+            return null
         } else {
             laxer.takeToken()
             if (laxer.peekToken()?.type == TokenType.IDENTIFIER){

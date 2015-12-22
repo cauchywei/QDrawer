@@ -44,7 +44,7 @@ class ForNode extends Node {
         scope.putSymbol(loopVar,new SymbolInfo(Type.NUMERIC,new NumericValue(fromVal.value)))
 
         def lastVal = new VoidValue()
-        OUTER:for (double i = fromVal.value; i < toVal.value; i+= stepVal.value) {
+        OUTER:for (double i = fromVal.value; fromVal.value<toVal.value?i < toVal.value:i>toVal.value; i+= stepVal.value) {
             scope.putValue(loopVar,new NumericValue(i))
             lastVal = body.eval(scope)
             if (scope.returnFlag) {

@@ -42,24 +42,28 @@ class AssignmentNode extends ExpressionNode {
 
 
         if (variable.name.type == TokenType.ORIGIN) {
-            if (!(val instanceof PointValue)) {
-                def trans = val.asType(PointValue)
+            if (val instanceof PointValue) {
+                def trans = val
                 scope.graphics2D?.translate(trans.x.value, trans.y.value)
             } else {
                 Console.addError(new IllegalOperateError(this,'origin must be a Point.but now is ' + valueType.name))
                 return null
             }
         }else if (variable.name.type == TokenType.ROT) {
-            if (!(val instanceof NumericValue)) {
-                scope.graphics2D?.rotate(val.asType(NumericValue).value)
+            if (val instanceof NumericValue) {
+                scope.graphics2D?.rotate(val.value)
             } else {
                 Console.addError(new IllegalOperateError(this,'rot must be a Number.but now is ' + valueType.name))
                 return null
             }
         }else if (variable.name.type == TokenType.SCALE) {
-            if (!(val instanceof NumericValue)) {
-                def rot = val.asType(PointValue)
-                scope.graphics2D?.translate(rot.x.value, rot.y.value)
+            if (val instanceof NumericValue) {
+                def rot = val
+                scope.graphics2D?.scale(rot.value, rot.value)
+            } else if(val instanceof PointValue){
+                def rot = val
+                scope.graphics2D?.scale(rot.x.value, rot.y.value)
+
             } else {
                 Console.addError(new IllegalOperateError(this,'scale must be a Point.but now is ' + valueType.name))
                 return null

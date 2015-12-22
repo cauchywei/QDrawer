@@ -1,6 +1,14 @@
 package org.sssta.qdrawer.gui
 
+import org.apache.tools.ant.filters.StringInputStream
+import org.sssta.qdrawer.Console
+import org.sssta.qdrawer.Parser
+import org.sssta.qdrawer.lexer.CodeError
+
 import javax.swing.*
+import javax.swing.event.DocumentEvent
+import javax.swing.event.DocumentListener
+import javax.swing.text.PlainDocument
 import java.awt.*
 
 /**
@@ -8,39 +16,60 @@ import java.awt.*
  */
 class DrawerWindow extends JFrame {
 
-    JTextPane codePane
-    JPanel canvas
-    JTextPane consolePane = new JTextPane()
+    interface ErrorListener {
+        void onError(CodeError error);
+    }
 
+    JTextPane codePane
+    CanvasPanel canvas
+    JTextPane consolePane = new JTextPane()
     JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
     JSplitPane codeSplitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
 
+
+    HighLightRender highLightRender = new HighLightRender()
+
+    ErrorListener errorListener = new ErrorListener() {
+
+        @Override
+        void onError(CodeError error) {
+
+        }
+    }
+
     DrawerWindow() {
         setTitle("QDrawer")
+        setBackground(new Color(30, 30, 20))
+
         def screenSize = Toolkit.getDefaultToolkit().getScreenSize()
 
 
         def container = new JPanel()
         container.setLayout(new BorderLayout());
 
+
         codePane = new JTextPane()
-        codePane.setFont(new Font("Consolas",Font.BOLD,16))
-        codePane.setBackground(new Color(57,57,57))
-        codePane.setForeground(new Color(200,200,200))
-        codePane.setSelectedTextColor(new Color(200,200,200))
-        codePane.setSelectionColor(new Color(45,88,147))
-        codePane.setCaretColor(new Color(220,220,220))
-        codePane.setMargin(new Insets(20,20,20,20))
-        codePane.setMinimumSize(new Dimension((screenSize.getWidth()/2).intValue(),200))
+        codePane.setFont(new Font("Consolas", Font.BOLD, 16))
+        codePane.setBackground(new Color(57, 57, 57))
+        codePane.setForeground(new Color(200, 200, 200))
+        codePane.setSelectedTextColor(new Color(200, 200, 200))
+        codePane.setSelectionColor(new Color(45, 88, 147))
+        codePane.setCaretColor(new Color(220, 220, 220))
+        codePane.setMargin(new Insets(20, 20, 20, 20))
+        codePane.setMinimumSize(new Dimension((screenSize.getWidth() / 2).intValue(), 200))
+        def doc = codePane.getDocument()
+        if (doc instanceof PlainDocument) {
+            doc.putProperty(PlainDocument.tabSizeAttribute, 4);
+        }
+//        setTabs( codePane, 4 );
 
-
-        consolePane.setFont(new Font("Consolas",Font.BOLD,16))
-        consolePane.setBackground(new Color(57,57,57))
-        consolePane.setForeground(new Color(255,131,126))
-        consolePane.setSelectedTextColor(new Color(200,200,200))
-        consolePane.setSelectionColor(new Color(45,88,147))
-        consolePane.setCaretColor(new Color(220,220,220))
-        consolePane.setMargin(new Insets(15,15,15,15))
+        consolePane.setFont(new Font("Consolas", Font.BOLD, 16))
+        consolePane.setBackground(new Color(57, 57, 57))
+        consolePane.setForeground(new Color(255, 131, 126))
+        consolePane.setSelectedTextColor(new Color(200, 200, 200))
+        consolePane.setSelectionColor(new Color(45, 88, 147))
+        consolePane.setCaretColor(new Color(220, 220, 220))
+        consolePane.setMargin(new Insets(15, 15, 15, 15))
         consolePane.setEditable(false)
         consolePane.setText("Code Error: hahahahah")
 
@@ -48,22 +77,89 @@ class DrawerWindow extends JFrame {
         codeSplitPane.setBottomComponent(consolePane)
 
 
-        codeSplitPane.setDividerLocation((screenSize.getHeight()*0.7).intValue())
+        codeSplitPane.setDividerLocation((screenSize.getHeight() * 0.7).intValue())
 
         splitPane.setLeftComponent(codeSplitPane)
 
         canvas = new CanvasPanel()
+        canvas.setMinimumSize(new Dimension((screenSize.getWidth() / 2).intValue(), screenSize.getHeight().intValue()))
 
         splitPane.setRightComponent(canvas)
-        splitPane.setDividerLocation((screenSize.getWidth()/2.3).intValue())
+        splitPane.setDividerLocation((screenSize.getWidth() / 2.3).intValue())
 
         getContentPane().add(splitPane)
 
-//        setBounds(0,0,screenSize.getWidth().intValue(),screenSize.getHeight().intValue())
         setMinimumSize(screenSize)
         setExtendedState(getExtendedState() | MAXIMIZED_BOTH);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         pack()
         setVisible(true)
+
+        codePane.getDocument().addDocumentListener(highLightRender)
+        codePane.getDocument().addDocumentListener(new DocumentListener() {
+
+            long lastTime
+            Thread lastThread
+
+            @Override
+            void insertUpdate(DocumentEvent e) {
+                onChange(e)
+            }
+
+            @Override
+            void removeUpdate(DocumentEvent e) {
+                onChange(e)
+            }
+
+            @Override
+            void changedUpdate(DocumentEvent e) {
+            }
+
+            void onChange(DocumentEvent event) {
+                if (lastTime + 200 < System.currentTimeMillis()) {
+                    lastTime = System.currentTimeMillis()
+                    try {
+                        lastThread?.stop()
+                        lastThread = new Thread() {
+                            @Override
+                            void run() {
+
+                                try {
+                                    Console.errors.clear()
+                                    def code = codePane.getText()
+                                    def parser = new Parser(new StringInputStream(code))
+                                    def module = parser.parse()
+                                    def ast = module.build()
+                                    canvas.ast = ast
+                                } catch (codeError) {
+
+                                } finally {
+
+                                    def sb = new StringBuilder()
+                                    Console.errors.each {
+                                        sb.append(String.format("[line: %d (%d,%d)] %s\n", it.row, it.row, it.col, it.message))
+                                    }
+                                    println sb.toString()
+                                    SwingUtilities.invokeAndWait(new Runnable() {
+                                        @Override
+                                        void run() {
+                                            consolePane.setText(sb.toString())
+                                        }
+                                    })
+                                }
+
+
+                            }
+                        }
+                        lastThread.start()
+                    } catch (err) {
+
+                    }
+
+                }
+            }
+        })
     }
+
+
 }
