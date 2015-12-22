@@ -23,19 +23,19 @@ class ForNode extends Node {
 
         def fromVal = from.eval(envr)
         if (!(fromVal instanceof NumericValue)) {
-            Console.addError(new IllegalTypeError(from,'illegal type:require Numeric but found ' + fromVal.type))
+            Console.addError(new IllegalTypeError(from,'illegal type:require Numeric but found ' + fromVal?.type))
             return null
         }
 
         def toVal = to.eval(envr)
         if (!(toVal instanceof NumericValue)) {
-            Console.addError(new IllegalTypeError(to,'illegal type:require Numeric but found ' + toVal.type))
+            Console.addError(new IllegalTypeError(to,'illegal type:require Numeric but found ' + toVal?.type))
             return null
         }
 
         def stepVal = step.eval(envr)
         if (!(stepVal instanceof NumericValue)) {
-            Console.addError(new IllegalTypeError(step,'illegal type:require Numeric but found ' + stepVal.type))
+            Console.addError(new IllegalTypeError(step,'illegal type:require Numeric but found ' + stepVal?.type))
             return null
         }
 

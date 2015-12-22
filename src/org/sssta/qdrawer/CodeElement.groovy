@@ -8,6 +8,8 @@ import org.sssta.qdrawer.lexer.Token
  */
 abstract class CodeElement {
     List<Token> tokens = []
+
+    //TODO completed cdoe range
     CodeRange range = new CodeRange()
 
     void addToken(Token token) {

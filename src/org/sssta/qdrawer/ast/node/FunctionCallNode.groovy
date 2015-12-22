@@ -24,7 +24,6 @@ class FunctionCallNode extends ExpressionNode {
 
         //may it is a draw func :)
         if (funcName.name.value.equalsIgnoreCase("draw")) {
-            def type = args[0].checkType(scope)
             if (args.size() == 1 ) {
                 def firstArgType = args[0].checkType(scope)
                 if (firstArgType instanceof PointType) {
@@ -37,7 +36,7 @@ class FunctionCallNode extends ExpressionNode {
                     return null
                 }
 
-            } else if (args.size() == 2 && type instanceof NumericType && args[1].checkType(scope) instanceof NumericType) {
+            } else if (args.size() == 2 && args[0].checkType(scope) instanceof NumericType && args[1].checkType(scope) instanceof NumericType) {
                 scope.graphics2D?.fillOval(args[0].eval(scope).asType(NumericValue).value.intValue(),
                         args[1].eval(scope).asType(NumericValue).value.intValue(), Scope.pointRadius, Scope.pointRadius)
             } else if (args.size() == 3

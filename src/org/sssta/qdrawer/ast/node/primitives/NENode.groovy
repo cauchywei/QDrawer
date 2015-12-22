@@ -4,6 +4,7 @@ import org.sssta.qdrawer.Console
 import org.sssta.qdrawer.ast.Scope
 import org.sssta.qdrawer.ast.node.Node
 import org.sssta.qdrawer.ast.type.BooleanType
+import org.sssta.qdrawer.ast.type.NumericType
 import org.sssta.qdrawer.ast.type.Type
 import org.sssta.qdrawer.ast.value.BooleanValue
 import org.sssta.qdrawer.ast.value.NumericValue
@@ -43,7 +44,7 @@ class NENode extends PrimitiveNode {
         def leftType = left.checkType(scope)
         def rightType = right.checkType(scope)
 
-        if (!(leftType instanceof NumericValue && rightType instanceof NumericValue
+        if (!(leftType instanceof NumericType && rightType instanceof NumericType
         || leftType instanceof BooleanType && rightType instanceof BooleanType)) {
             Console.addError(new IllegalTypeError(this, 'unsupported comparing between ' + leftType + ' and '+ leftType + 'two types'))
         }

@@ -1,12 +1,11 @@
 package org.sssta.qdrawer.ast.node
-
 import org.sssta.qdrawer.Console
 import org.sssta.qdrawer.ast.Scope
 import org.sssta.qdrawer.ast.type.Type
+import org.sssta.qdrawer.ast.value.BooleanValue
 import org.sssta.qdrawer.ast.value.Value
 import org.sssta.qdrawer.ast.value.VoidValue
 import org.sssta.qdrawer.exception.IllegalOperateError
-
 /**
  * Created by cauchywei on 15/12/15.
  */
@@ -39,7 +38,7 @@ class ConstDeclarationNode extends ExpressionNode {
 
         def val = value.eval(scope)
         scope.putValue(variable.name.value, val)
-
+        scope.getSymbol(variable.name.value).setProperty("const",new BooleanValue(true));
         return new VoidValue()
     }
 

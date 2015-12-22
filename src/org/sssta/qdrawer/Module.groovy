@@ -35,7 +35,6 @@ class Module  {
 
 
         List<Node> moduleBody = []
-
         for (int i = 0; i < statements.size(); i++) {
             moduleBody << statements.get(i).createAstNode()
         }

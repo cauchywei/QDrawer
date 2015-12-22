@@ -47,13 +47,13 @@ class MultNode extends PrimitiveNode {
         def leftType = left.checkType(scope)
 
         if (!(leftType instanceof NumericType)) {
-            Console.addError(new IllegalTypeError(left,'illegal type:require Numeric but found ' + leftType))
+            Console.addError(new IllegalTypeError(left,'illegal type:require Number but found ' + leftType))
         }
 
         def rightType = right.checkType(scope)
 
         if (!(rightType instanceof NumericType)) {
-            Console.addError(new IllegalTypeError(right,'illegal type:require Numeric but found ' + rightType))
+            Console.addError(new IllegalTypeError(right,'illegal type:require Number but found ' + rightType))
         }
         return Type.NUMERIC
     }

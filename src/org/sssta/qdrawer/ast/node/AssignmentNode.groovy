@@ -3,6 +3,7 @@ import org.sssta.qdrawer.Console
 import org.sssta.qdrawer.ast.Scope
 import org.sssta.qdrawer.ast.SymbolInfo
 import org.sssta.qdrawer.ast.type.Type
+import org.sssta.qdrawer.ast.value.BooleanValue
 import org.sssta.qdrawer.ast.value.NumericValue
 import org.sssta.qdrawer.ast.value.PointValue
 import org.sssta.qdrawer.ast.value.Value
@@ -27,7 +28,7 @@ class AssignmentNode extends ExpressionNode {
         def symbol = scope.getSymbol(variable.name.value)
         if (symbol == null  ) {
             scope.putSymbol(variable.name.value,new SymbolInfo())
-        }else if (symbol.isConst) {
+        }else if (symbol.getProperty("const").asType(BooleanValue)?.value) {
             Console.addError(new IllegalOperateError(this,variable.name.value + ' is const, it can\'t be modified'))
             return variable.eval(scope)
         }

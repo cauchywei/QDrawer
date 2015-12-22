@@ -1,5 +1,6 @@
 package org.sssta.qdrawer.gui
 
+import org.sssta.qdrawer.Console
 import org.sssta.qdrawer.ast.Ast
 
 import javax.swing.*
@@ -36,7 +37,6 @@ class CanvasPanel extends JPanel {
 
                             paint(g2)
                             ast.eval()
-
                             g2.dispose();
                             getGraphics().drawImage(doubleBuffer, 0, 0, null);
                         }
@@ -45,18 +45,23 @@ class CanvasPanel extends JPanel {
                     sleep(200)
                 } catch (e) {
                     e.printStackTrace()
+                }finally{
+                    window.onError(Console.errors)
                 }
 
             }
         }
     }
 
-    CanvasPanel() {
+    DrawerWindow window
+
+    CanvasPanel(DrawerWindow window) {
+        this.window = window
         repaintThread.start()
     }
 
 
-    synchronized void setAst(Ast ast) {
+    void setAst(Ast ast) {
         this.ast = ast
 
     }

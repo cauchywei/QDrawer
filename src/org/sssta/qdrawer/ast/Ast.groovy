@@ -1,4 +1,5 @@
 package org.sssta.qdrawer.ast
+
 import org.sssta.qdrawer.Console
 import org.sssta.qdrawer.ast.node.Node
 
@@ -25,12 +26,12 @@ class Ast {
 
         cloneScope.graphics2D?.translate(0,0)
         cloneScope.graphics2D?.setColor(Color.RED)
-
+        Console.errors;
         for (int i = 0; i < body.size(); i++) {
             body.get(i).eval(cloneScope)
-            if (!Console.errors.isEmpty()) {
-                break
-            }
+//            if (!Console.errors.isEmpty()) {
+//                break
+//            }
         }
 
         return cloneScope

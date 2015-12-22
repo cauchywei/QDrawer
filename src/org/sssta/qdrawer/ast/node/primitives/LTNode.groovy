@@ -3,6 +3,7 @@ package org.sssta.qdrawer.ast.node.primitives
 import org.sssta.qdrawer.Console
 import org.sssta.qdrawer.ast.Scope
 import org.sssta.qdrawer.ast.node.Node
+import org.sssta.qdrawer.ast.type.NumericType
 import org.sssta.qdrawer.ast.type.Type
 import org.sssta.qdrawer.ast.value.BooleanValue
 import org.sssta.qdrawer.ast.value.NumericValue
@@ -48,16 +49,14 @@ class LTNode extends PrimitiveNode {
 
         def leftType = left.checkType(scope)
 
-        //TODO add more type plus opt
-
-        if (!(leftType instanceof NumericValue)) {
-            Console.addError(new IllegalTypeError(left,'illegal type:require Numeric but found ' + leftType))
+        if (!(leftType instanceof NumericType)) {
+            Console.addError(new IllegalTypeError(left,'illegal type:require Number but found ' + leftType))
         }
 
         def rightType = right.checkType(scope)
 
-        if (!(rightType instanceof NumericValue)) {
-            Console.addError(new IllegalTypeError(right,'illegal type:require Numeric but found ' + rightType))
+        if (!(rightType instanceof NumericType)) {
+            Console.addError(new IllegalTypeError(right,'illegal type:require Number but found ' + rightType))
         }
         return Type.BOOLEAN
     }

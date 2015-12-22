@@ -1,14 +1,12 @@
 package org.sssta.qdrawer.ast.node.primitives
-
 import org.sssta.qdrawer.Console
 import org.sssta.qdrawer.ast.Scope
 import org.sssta.qdrawer.ast.node.Node
+import org.sssta.qdrawer.ast.type.BooleanType
 import org.sssta.qdrawer.ast.type.Type
 import org.sssta.qdrawer.ast.value.BooleanValue
-import org.sssta.qdrawer.ast.value.NumericValue
 import org.sssta.qdrawer.ast.value.Value
 import org.sssta.qdrawer.exception.IllegalTypeError
-
 /**
  * Created by cauchywei on 15/12/13.
  */
@@ -46,15 +44,16 @@ class OrNode extends PrimitiveNode {
 
         def leftType = left.checkType(scope)
 
-        if (!(leftType instanceof NumericValue)) {
-            Console.addError(new IllegalTypeError(left,'illegal type:require Numeric but found ' + leftType))
+
+        if (!(leftType instanceof BooleanType)) {
+            Console.addError(new IllegalTypeError(left,'illegal type:require Boolean but found ' + leftType))
         }
 
         def rightType = right.checkType(scope)
 
-        if (!(rightType instanceof NumericValue)) {
-            Console.addError(new IllegalTypeError(right,'illegal type:require Numeric but found ' + rightType))
+        if (!(rightType instanceof BooleanType)) {
+            Console.addError(new IllegalTypeError(right,'illegal type:require Boolean but found ' + rightType))
         }
-        return Type.NUMERIC
+        return Type.BOOLEAN
     }
 }

@@ -67,7 +67,7 @@ class Parser {
         if (laxer.peekToken()?.type == TokenType.SEMICO) {
             laxer.takeToken()
         } else {
-            errors << new CodeError(col: laxer.col, row: laxer.row,message: 'Excepted ; at line ' + laxer.row)
+            Console.errors << new CodeError(col: laxer.col, row: laxer.row,message: 'Excepted ; at line ' + laxer.row)
         }
     }
 

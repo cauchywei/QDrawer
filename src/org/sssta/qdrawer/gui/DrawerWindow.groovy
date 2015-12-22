@@ -29,13 +29,6 @@ class DrawerWindow extends JFrame {
 
     HighLightRender highLightRender = new HighLightRender()
 
-    ErrorListener errorListener = new ErrorListener() {
-
-        @Override
-        void onError(CodeError error) {
-
-        }
-    }
 
     DrawerWindow() {
         setTitle("QDrawer")
@@ -58,10 +51,7 @@ class DrawerWindow extends JFrame {
         codePane.setMargin(new Insets(20, 20, 20, 20))
         codePane.setMinimumSize(new Dimension((screenSize.getWidth() / 2).intValue(), 200))
         def doc = codePane.getDocument()
-        if (doc instanceof PlainDocument) {
-            doc.putProperty(PlainDocument.tabSizeAttribute, 4);
-        }
-//        setTabs( codePane, 4 );
+        doc.putProperty(PlainDocument.tabSizeAttribute, 4);
 
         consolePane.setFont(new Font("Consolas", Font.BOLD, 16))
         consolePane.setBackground(new Color(57, 57, 57))
@@ -74,14 +64,14 @@ class DrawerWindow extends JFrame {
         consolePane.setText("Code Error: hahahahah")
 
         codeSplitPane.setTopComponent(new JScrollPane(codePane))
-        codeSplitPane.setBottomComponent(consolePane)
+        codeSplitPane.setBottomComponent(new JScrollPane(consolePane))
 
 
         codeSplitPane.setDividerLocation((screenSize.getHeight() * 0.7).intValue())
 
         splitPane.setLeftComponent(codeSplitPane)
 
-        canvas = new CanvasPanel()
+        canvas = new CanvasPanel(this)
         canvas.setMinimumSize(new Dimension((screenSize.getWidth() / 2).intValue(), screenSize.getHeight().intValue()))
 
         splitPane.setRightComponent(canvas)
@@ -116,7 +106,7 @@ class DrawerWindow extends JFrame {
             }
 
             void onChange(DocumentEvent event) {
-                if (lastTime + 200 < System.currentTimeMillis()) {
+//                if (lastTime + 200 < System.currentTimeMillis()) {
                     lastTime = System.currentTimeMillis()
                     try {
                         try {
@@ -139,17 +129,7 @@ class DrawerWindow extends JFrame {
 
                                 } finally {
 
-                                    def sb = new StringBuilder()
-                                    for (CodeError it :Console.errors){
-                                        sb.append(String.format("[line: %d (%d,%d)] %s\n", it.row, it.row, it.col, it.message))
-                                    }
-                                    println sb.toString()
-                                    SwingUtilities.invokeAndWait(new Runnable() {
-                                        @Override
-                                        void run() {
-                                            consolePane.setText(sb.toString())
-                                        }
-                                    })
+                                    onError(Console.errors)
                                 }
 
 
@@ -161,9 +141,23 @@ class DrawerWindow extends JFrame {
                     }
 
                 }
-            }
+//            }
         })
     }
 
+    void onError(java.util.List<CodeError> errors) {
+        def sb = new StringBuilder()
+
+        for (CodeError it :errors){
+            sb.append(String.format("[line: %d (%d,%d)] %s\n", it.row, it.row, it.col, it.message))
+        }
+        println sb.toString()
+        SwingUtilities.invokeAndWait(new Runnable() {
+            @Override
+            void run() {
+                consolePane.setText(sb.toString())
+            }
+        })
+    }
 
 }

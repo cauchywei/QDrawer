@@ -88,4 +88,31 @@ class ModuleTest extends GroovyTestCase {
         assertEquals(var.asType(NumericValue).value,100)
 
     }
+
+    @Test
+    void testErrorModule() {
+
+        def code = '''module hello;
+                    -- import stddrw;
+
+                    using java.lang.Math;
+                     const PI = 3.1415;
+                    -- draw();
+                    -- a*2;
+                    origin = (-500,200);
+
+                    origin = (0,20);
+                     \trot = PI/4;
+                    -- PI = 2;
+
+                    '''
+
+        def parser = new Parser(new StringInputStream(code))
+
+        def ast = parser.parse().build()
+
+        def scope = ast.eval()
+
+        def errors = Console.errors
+    }
 }

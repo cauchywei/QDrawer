@@ -1,4 +1,6 @@
 package org.sssta.qdrawer.statement.expression
+
+import org.sssta.qdrawer.Console
 import org.sssta.qdrawer.ast.node.ExpressionNode
 import org.sssta.qdrawer.lexer.CodeError
 import org.sssta.qdrawer.lexer.Laxer
@@ -39,6 +41,7 @@ abstract class Expression {
 
                 def valStart = laxer.save()
                 def expr = parse(laxer,[])
+                Console.errors;
                 if (expr == null) {
                     //try to match a point expression
                     laxer.go(valStart)
@@ -149,18 +152,21 @@ abstract class Expression {
                 def func = new InvokeExpression(function: var)
                 def args = []
                 func.arguments = args
-                def arg = parseExpression(laxer, errors)
+                def argStart = laxer.save()
+                def arg = parseExpression(laxer, [])
                 if (arg != null) {
                     args << arg
                     while (laxer.peekToken()?.type == TokenType.COMMA) {
                         laxer.takeToken()
-                        arg = parseExpression(laxer,errors)
+                        arg = parseExpression(laxer, errors)
                         if (arg == null) {
-                            errors << new CodeError(row :laxer.row,col :laxer.col,message: "Excepted an argument.")
+                            errors << new CodeError(row: laxer.row, col: laxer.col, message: "Excepted an argument.")
                             return null
                         }
                         args << arg
                     }
+                } else {
+                    laxer.go(argStart)
                 }
 
                 if (laxer.peekToken()?.type != TokenType.CLOSE_BRACKET) {

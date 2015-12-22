@@ -7,7 +7,7 @@ import org.sssta.qdrawer.ast.node.Node
  */
 class CodeError {
 
-    int col,row
+    int col = -1,row = -1
     String message
     TokenType type
 
@@ -23,8 +23,8 @@ class CodeError {
     }
 
     CodeError(Node node,String message) {
-        col = node.range?.startCol
-        row = node.range?.startRow
+//        col = node.range?.startCol
+//        row = node.range?.startRow
         this.message = message
     }
 

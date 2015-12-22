@@ -6,7 +6,7 @@ import org.sssta.qdrawer.exception.ReachTheEndOfCodeException
 class Laxer {
 
 
-    enum  ParseState
+    static enum  ParseState
     {
         BEGIN,
         NUMERIC,

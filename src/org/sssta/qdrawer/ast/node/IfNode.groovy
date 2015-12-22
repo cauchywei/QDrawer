@@ -27,7 +27,7 @@ class IfNode extends Node {
                 return elseNode.eval(scope)
             }
         } else {
-            Console.addError(new IllegalTypeError(this,'illegal type: require boolean but found ' + condition.type))
+            Console.addError(new IllegalTypeError(this,'illegal type: require boolean but found ' + condition?.type))
         }
         return null
     }
