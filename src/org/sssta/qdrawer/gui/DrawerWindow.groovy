@@ -27,7 +27,7 @@ class DrawerWindow extends JFrame {
     JSplitPane codeSplitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
 
 
-    HighLightRender highLightRender = new HighLightRender()
+    HighLightRender highLightRender
 
 
     DrawerWindow() {
@@ -84,6 +84,8 @@ class DrawerWindow extends JFrame {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         pack()
         setVisible(true)
+
+        highLightRender = new HighLightRender(codePane)
 
         codePane.getDocument().addDocumentListener(highLightRender)
         codePane.getDocument().addDocumentListener(new DocumentListener() {

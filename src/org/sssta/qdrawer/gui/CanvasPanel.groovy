@@ -22,7 +22,6 @@ class CanvasPanel extends JPanel {
                     if (ast != null) {
 
                         synchronized (ast) {
-                            println "draw..."
 
                             Dimension size = getSize();
                             if (doubleBuffer == null ||

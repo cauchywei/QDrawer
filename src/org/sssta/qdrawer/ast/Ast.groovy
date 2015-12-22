@@ -23,10 +23,9 @@ class Ast {
 
     Scope eval() {
         def cloneScope = global.copy()
-
         cloneScope.graphics2D?.translate(0,0)
         cloneScope.graphics2D?.setColor(Color.RED)
-        Console.errors;
+        Console.errors.clear();
         for (int i = 0; i < body.size(); i++) {
             body.get(i).eval(cloneScope)
 //            if (!Console.errors.isEmpty()) {

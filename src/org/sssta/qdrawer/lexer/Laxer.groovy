@@ -50,7 +50,9 @@ class Laxer {
     InputStream  mStreamReader
     int col = 1
     int row = 1
+    int currentIndex;
 
+    int startIndex
 
     Laxer(InputStream mStreamReader) {
         this.mStreamReader = mStreamReader
@@ -69,6 +71,7 @@ class Laxer {
             switch (state) {
 
                 case ParseState.BEGIN:
+                    startIndex = currentIndex
                     switch (c){
                         case '(':
                             return generateToken(TokenType.OPEN_BRACKET)
@@ -166,6 +169,7 @@ class Laxer {
                         case ';':
                             return generateToken(TokenType.SEMICO)
                         case '"':
+                            buffer << c
                             state = ParseState.STRING
                             break
                         case {Character.isDigit(c)}:
@@ -173,8 +177,6 @@ class Laxer {
                             state = ParseState.NUMERIC
                             break;
                         case '\n':
-                            row++
-                            col = 0
                             if (state == ParseState.COMMENT) {
                                 generateToken(buffer.toString(),TokenType.COMMENT);
                             }
@@ -246,6 +248,7 @@ class Laxer {
                 case ParseState.STRING:
 
                     if (c == '"') {
+                        buffer << '"'
                         return generateToken(buffer.toString(), TokenType.STRING)
                     }else if (c == '\\') {
                         buffer << c
@@ -277,7 +280,6 @@ class Laxer {
                     break
             }
 
-            col++
         }
 
 
@@ -333,7 +335,18 @@ class Laxer {
             return null
         }
 
-        charBuffer.remove(0)
+
+        def remove = charBuffer.remove(0)
+
+        if (remove == '\n') {
+            row++
+            col = 0
+        } else {
+            col++
+        }
+        currentIndex++
+
+        return remove
     }
 
     private boolean hasNextChar(){
@@ -343,6 +356,11 @@ class Laxer {
     private void backforwardChar(char chr){
         if (col - 1 > 0)
             col--
+        else {
+            row --
+            col = 0
+        }
+        currentIndex--
         charBuffer.add(0,chr)
     }
 
@@ -404,12 +422,15 @@ class Laxer {
         def token = new Token(type)
         token.col = col
         token.row = row
+        token.start = currentIndex - type.name().length() - 1
+        token.end = currentIndex
         token
     }
     Token generateToken(String value, TokenType type) {
         def token = generateToken(type)
         token.value = value
-        token
+        token.start = currentIndex - value.length()
+        return token
     }
 
     CodeError generateError(TokenType type,String msg){

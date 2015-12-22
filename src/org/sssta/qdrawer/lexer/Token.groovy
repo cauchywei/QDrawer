@@ -11,6 +11,8 @@ class Token {
     TokenType type
     int col
     int row
+    int start
+    int end
 
     Token(TokenType type) {
         this.type = type
@@ -49,7 +51,7 @@ class Token {
     }
 
     CodeRange getRange() {
-        return new CodeRange(startRow: row,endRow: row,startCol: col,endCol: col + value.length() + (type == TokenType.STRING?2:0))
+        return new CodeRange(start: start,end:end,startRow: row,endRow: row,startCol: col,endCol: col + value.length())
     }
 
 }

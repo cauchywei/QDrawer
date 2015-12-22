@@ -22,7 +22,7 @@ class LiteralExpression extends Expression {
     ExpressionNode createAstNode() {
         switch (token.type) {
             case TokenType.STRING:
-                return new StringNode(token.value)
+                return new StringNode(token.value.substring(1,token.value.length()-1))
             case TokenType.NUMBERIC:
                 return new NumericNode(Double.valueOf(token.value))
             case TokenType.TRUE:

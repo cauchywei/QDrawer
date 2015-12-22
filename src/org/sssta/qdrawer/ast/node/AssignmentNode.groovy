@@ -29,7 +29,7 @@ class AssignmentNode extends ExpressionNode {
         if (symbol == null  ) {
             scope.putSymbol(variable.name.value,new SymbolInfo())
         }else if (symbol.getProperty("const").asType(BooleanValue)?.value) {
-            Console.addError(new IllegalOperateError(this,variable.name.value + ' is const, it can\'t be modified'))
+            Console.addError(new IllegalOperateError(variable.name,variable.name.value + ' is const, it can\'t be modified'))
             return variable.eval(scope)
         }
 
@@ -47,14 +47,14 @@ class AssignmentNode extends ExpressionNode {
                 def trans = val
                 scope.graphics2D?.translate(trans.x.value, trans.y.value)
             } else {
-                Console.addError(new IllegalOperateError(this,'origin must be a Point.but now is ' + valueType.name))
+                Console.addError(new IllegalOperateError(variable.name,'origin must be a Point.but now is ' + valueType.name))
                 return null
             }
         }else if (variable.name.type == TokenType.ROT) {
             if (val instanceof NumericValue) {
                 scope.graphics2D?.rotate(val.value)
             } else {
-                Console.addError(new IllegalOperateError(this,'rot must be a Number.but now is ' + valueType.name))
+                Console.addError(new IllegalOperateError(variable.name,'rot must be a Number.but now is ' + valueType.name))
                 return null
             }
         }else if (variable.name.type == TokenType.SCALE) {
@@ -66,7 +66,7 @@ class AssignmentNode extends ExpressionNode {
                 scope.graphics2D?.scale(rot.x.value, rot.y.value)
 
             } else {
-                Console.addError(new IllegalOperateError(this,'scale must be a Point.but now is ' + valueType.name))
+                Console.addError(new IllegalOperateError(variable.name,'scale must be a Point.but now is ' + valueType.name))
                 return null
             }
         }

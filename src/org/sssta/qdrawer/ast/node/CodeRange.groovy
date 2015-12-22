@@ -6,6 +6,7 @@ package org.sssta.qdrawer.ast.node
 class CodeRange {
     int startRow,startCol
     int endRow,endCol
+    int start,end
 
     void union(CodeRange range) {
         if (startRow > range.startRow) {
