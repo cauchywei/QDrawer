@@ -163,10 +163,10 @@ class FunctionCallNode extends ExpressionNode {
                 clazz = Class.forName(name.substring(0, index))
                 methName = name.substring(index + 1, name.size())
             } else {
-                //otherwise search the import list
+                //otherwise search the using list
 
-                def imports = scope.getUsings()
-                clazz = imports.find { it.methods.any { it.name.equalsIgnoreCase(name) } }
+                def usings = scope.getUsings()
+                clazz = usings.find { it.methods.any { it.name.equalsIgnoreCase(name) } }
                 methName = name
             }
 

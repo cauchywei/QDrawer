@@ -51,16 +51,17 @@ class ModuleTest extends GroovyTestCase {
                     c = sin(2*PI);
                     d = add(1,2);
                     e = max(99,100);
+
+                    p = (20,30);
                     '''
 
         def parser = new Parser(new StringInputStream(code))
 
         def ast = parser.parse().build()
 
-        ast.eval()
+        def scope = ast.eval()
 
         def errors = Console.errors
-        def scope = ast.global
 
         def var = scope.getValue("PI")
         assertTrue(var instanceof NumericValue)

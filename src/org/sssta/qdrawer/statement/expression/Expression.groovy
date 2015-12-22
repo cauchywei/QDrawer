@@ -37,8 +37,31 @@ abstract class Expression {
             if (laxer.peekToken()?.type == TokenType.IS || laxer.peekToken()?.type == TokenType.ASSIGMENT) {
                 laxer.takeToken()
 
+                def valStart = laxer.save()
                 def expr = parse(laxer,[])
-                if (expr != null) {
+                if (expr == null) {
+                    //try to match a point expression
+                    laxer.go(valStart)
+                    if (laxer.peekToken()?.type == TokenType.OPEN_BRACKET) {
+                        laxer.takeToken()
+
+                        def xexpr = parse(laxer,[])
+                        if (xexpr != null && laxer.peekToken()?.type == TokenType.COMMA) {
+                            laxer.takeToken()
+
+                            def yexpr = parse(laxer,[]);
+
+                            if (yexpr != null) {
+                                if (laxer.peekToken()?.type == TokenType.CLOSE_BRACKET) {
+                                    laxer.takeToken()
+                                    expr =  new PointExpression(x: xexpr,y: yexpr)
+                                }}
+                            }
+                    }
+
+                }
+
+                if (expr!=null){
                     assignmentExpression.value = expr
                     return assignmentExpression
                 }

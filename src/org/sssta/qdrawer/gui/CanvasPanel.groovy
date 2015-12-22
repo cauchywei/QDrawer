@@ -43,7 +43,7 @@ class CanvasPanel extends JPanel {
                     }
                     sleep(200)
                 } catch (e) {
-
+                    e.printStackTrace()
                 }
 
             }
@@ -54,42 +54,6 @@ class CanvasPanel extends JPanel {
         repaintThread.start()
     }
 
-    @Override
-    protected void paintComponent(Graphics g) {
-        super.paintComponent(g)
-
-
-    }
-
-    @Override
-    public void update(Graphics g) {
-        Dimension size = getSize();
-        if (doubleBuffer == null ||
-                doubleBuffer.getWidth(this) != size.width ||
-                doubleBuffer.getHeight(this) != size.height)
-        {
-            doubleBuffer = createImage(size.width.intValue(), size.height.intValue());
-        }
-
-
-        if (doubleBuffer != null) {
-            Graphics g2 = doubleBuffer.getGraphics();
-
-
-//
-//            g2.setColor(Color.WHITE)
-//            g2.drawRect(0,0,size.width.intValue(), size.height.intValue())
-//            g2.setColor(Color.RED)
-
-
-            paint(g2);
-            g2.dispose();
-            g.drawImage(doubleBuffer, 0, 0, null);
-        }
-        else {
-            paint(g);
-        }
-    }
 
     synchronized void setAst(Ast ast) {
         this.ast = ast

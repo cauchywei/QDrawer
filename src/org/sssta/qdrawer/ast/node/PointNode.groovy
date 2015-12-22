@@ -1,6 +1,7 @@
 package org.sssta.qdrawer.ast.node
 import org.sssta.qdrawer.Console
 import org.sssta.qdrawer.ast.Scope
+import org.sssta.qdrawer.ast.type.NumericType
 import org.sssta.qdrawer.ast.type.Type
 import org.sssta.qdrawer.ast.value.NumericValue
 import org.sssta.qdrawer.ast.value.PointValue
@@ -37,13 +38,13 @@ class PointNode extends ExpressionNode{
     Type checkType(Scope scope) {
 
         def xType = x.checkType(scope)
-        if (!(xType instanceof NumericValue)) {
+        if (!(xType instanceof NumericType)) {
             Console.addError(new IllegalTypeError(x,'illegal type:require Numeric but found ' + xType))
             return null
         }
 
         def yType = y.checkType(scope)
-        if (!(yType instanceof NumericValue)) {
+        if (!(yType instanceof NumericType)) {
             Console.addError(new IllegalTypeError(y,'illegal type:require Numeric but found ' + yType))
             return null
         }

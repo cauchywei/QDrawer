@@ -7,7 +7,6 @@ import org.sssta.qdrawer.ast.value.VoidValue
 
 import java.awt.*
 import java.util.List
-
 /**
  * Created by cauchywei on 15/9/14.
  */
@@ -21,6 +20,8 @@ class Scope {
     Scope parent
     HashMap<String, SymbolInfo> table = new HashMap<>()
     List<Class> usings = [];
+    List<Ast> imports = [];
+
 
 
     boolean isFunctionScope = false
@@ -155,6 +156,9 @@ class Scope {
         copy.parent = parent
         copy.table = new HashMap<>()
         copy.putAll(this)
+        copy.usings.addAll(usings)
+        copy.imports.addAll(imports)
+
         copy.isFunctionScope = isFunctionScope
         copy.returnFlag = returnFlag
         copy.returnValue = returnValue
