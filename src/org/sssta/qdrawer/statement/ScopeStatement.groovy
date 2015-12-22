@@ -21,13 +21,14 @@ class ScopeStatement extends Statement {
 
         if (laxer.peekToken()?.type == TokenType.OPEN_SCOPE) {
             hasScopeMark = true
-            laxer.takeToken()
+            scopeStatement.addToken(laxer.takeToken())
         }
 
         def subStatement
 
         while (subStatement = Statement.parse(laxer, [])) {
             scopeStatement.statements << subStatement
+            scopeStatement.getRange().union(subStatement.getRange())
             if (!hasScopeMark) {
                 break
             }
@@ -36,7 +37,7 @@ class ScopeStatement extends Statement {
         if (hasScopeMark) {
 
             if (laxer.peekToken()?.type == TokenType.CLOSE_SCOPE) {
-                laxer.takeToken()
+                scopeStatement.addToken(laxer.takeToken())
             } else {
                 errors << new CodeError(col: laxer.col, row: laxer.row, message: 'Excepted }.')
                 return null

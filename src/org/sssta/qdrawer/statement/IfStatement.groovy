@@ -19,14 +19,14 @@ class IfStatement extends Statement {
             errors << new CodeError(col: laxer.col, row: laxer.row, message: 'Excepted if declaration.')
             return null
         } else {
-            laxer.takeToken()
+            statement.addToken(laxer.takeToken())
 
             if (laxer.peekToken()?.type != TokenType.OPEN_BRACKET) {
                 errors << new CodeError(col: laxer.col, row: laxer.row, message: 'Excepted (.')
                 return null
             } else {
 
-                laxer.takeToken()
+                statement.addToken(laxer.takeToken())
 
                 def condition = Expression.parse(laxer, errors)
 

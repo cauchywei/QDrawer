@@ -119,7 +119,11 @@ class DrawerWindow extends JFrame {
                 if (lastTime + 200 < System.currentTimeMillis()) {
                     lastTime = System.currentTimeMillis()
                     try {
-                        lastThread?.stop()
+                        try {
+                            lastThread?.stop()
+                        } catch (e1) {
+
+                        }
                         lastThread = new Thread() {
                             @Override
                             void run() {
@@ -136,7 +140,7 @@ class DrawerWindow extends JFrame {
                                 } finally {
 
                                     def sb = new StringBuilder()
-                                    Console.errors.each {
+                                    for (CodeError it :Console.errors){
                                         sb.append(String.format("[line: %d (%d,%d)] %s\n", it.row, it.row, it.col, it.message))
                                     }
                                     println sb.toString()

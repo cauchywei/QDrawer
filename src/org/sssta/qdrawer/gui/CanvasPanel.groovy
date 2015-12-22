@@ -18,15 +18,15 @@ class CanvasPanel extends JPanel {
         void run() {
             while (true) {
                 try {
-                    synchronized (ast){
-                        if (ast != null) {
+                    if (ast != null) {
+
+                        synchronized (ast) {
                             println "draw..."
 
                             Dimension size = getSize();
                             if (doubleBuffer == null ||
                                     doubleBuffer.getWidth(CanvasPanel.this) != size.width ||
-                                    doubleBuffer.getHeight(CanvasPanel.this) != size.height)
-                            {
+                                    doubleBuffer.getHeight(CanvasPanel.this) != size.height) {
                                 doubleBuffer = createImage(size.width.intValue(), size.height.intValue());
                             }
 
@@ -40,6 +40,7 @@ class CanvasPanel extends JPanel {
                             g2.dispose();
                             getGraphics().drawImage(doubleBuffer, 0, 0, null);
                         }
+
                     }
                     sleep(200)
                 } catch (e) {

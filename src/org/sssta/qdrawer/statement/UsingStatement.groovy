@@ -19,9 +19,9 @@ class UsingStatement extends Statement{
             errors << new CodeError(col: laxer.col, row: laxer.row, message: 'Excepted import declaration.')
             return null
         } else {
-            laxer.takeToken()
+            statement.addToken(laxer.takeToken())
             if (laxer.peekToken()?.type == TokenType.IDENTIFIER){
-                statement.library = laxer.takeToken()
+                statement.addToken(statement.library = laxer.takeToken())
             }else {
                 errors << new CodeError(col: laxer.col, row: laxer.row, message: 'Excepted import lib name.')
                 return null

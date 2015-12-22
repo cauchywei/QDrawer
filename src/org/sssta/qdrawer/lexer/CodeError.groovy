@@ -23,8 +23,8 @@ class CodeError {
     }
 
     CodeError(Node node,String message) {
-        col = node.range.startCol
-        row = node.range.startCol
+        col = node.range?.startCol
+        row = node.range?.startRow
         this.message = message
     }
 

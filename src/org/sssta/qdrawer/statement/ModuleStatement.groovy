@@ -18,9 +18,10 @@ class ModuleStatement extends Statement {
             errors << new CodeError(col: laxer.col, row: laxer.row, message: 'Excepted module declaration.')
             return null
         } else {
-            laxer.takeToken()
+            statement.addToken(laxer.takeToken())
             if (laxer.peekToken()?.type == TokenType.IDENTIFIER){
                 statement.name = laxer.takeToken()
+                statement.addToken(statement.name)
             }else {
                 errors << new CodeError(col: laxer.col, row: laxer.row, message: 'Excepted module name.')
             }

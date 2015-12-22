@@ -8,7 +8,7 @@ import org.sssta.qdrawer.ast.value.Value
  */
 abstract class Node {
 
-    Range range
+    CodeRange range
     Node parent
     abstract Value eval(Scope scope)
     abstract Type checkType(Scope scope)
