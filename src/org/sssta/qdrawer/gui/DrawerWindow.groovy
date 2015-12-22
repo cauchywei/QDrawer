@@ -145,19 +145,21 @@ class DrawerWindow extends JFrame {
         })
     }
 
-    void onError(java.util.List<CodeError> errors) {
-        def sb = new StringBuilder()
+    void  onError(final java.util.List<CodeError> errors) {
+            SwingUtilities.invokeLater(new Runnable() {
+                @Override
 
-        for (CodeError it :errors){
-            sb.append(String.format("[line: %d (%d,%d)] %s\n", it.row, it.row, it.col, it.message))
-        }
-        println sb.toString()
-        SwingUtilities.invokeAndWait(new Runnable() {
-            @Override
-            void run() {
-                consolePane.setText(sb.toString())
-            }
-        })
+                void run() {
+                    def sb = new StringBuilder()
+
+                    for (CodeError it :errors){
+                        sb.append(String.format("[line: %d (%d,%d)] %s\n", it.row, it.row, it.col, it.message))
+                    }
+                    println sb.toString()
+                    consolePane.setText(sb.toString())
+                }
+            })
+
     }
 
 }

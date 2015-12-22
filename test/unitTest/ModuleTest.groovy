@@ -102,8 +102,12 @@ class ModuleTest extends GroovyTestCase {
                     origin = (-500,200);
 
                     origin = (0,20);
-                     \trot = PI/4;
+                    rot = PI/4;
                     -- PI = 2;
+                    a = 2;
+                    if(a > 1){
+                        a = -1;
+                    }
 
                     '''
 

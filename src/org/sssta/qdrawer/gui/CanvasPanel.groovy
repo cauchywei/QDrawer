@@ -45,8 +45,12 @@ class CanvasPanel extends JPanel {
                     sleep(200)
                 } catch (e) {
                     e.printStackTrace()
-                }finally{
-                    window.onError(Console.errors)
+                }finally {
+                    try {
+                        window.onError(Console.errors)
+                    } catch (e1) {
+
+                    }
                 }
 
             }
